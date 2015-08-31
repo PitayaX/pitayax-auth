@@ -1,4 +1,4 @@
 const express = require("express")
 
-let test = "aaa"
-var a = "123";
+const test = "aaa"
+const a = "123"
