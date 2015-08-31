@@ -37,5 +37,46 @@
     "jquery": "^2.1.4",
     "mysql": "^2.7.0",
     "oauth2orize": "^1.0.1"
-  }
+  },
+	"name":"pitayax-auth",
+	"version": "0.0.1",
+	"description": "The restful service to do authenticate. Used MySql as background databse.",
+	"main": "app.js",
+	"scripts": {
+		"test": "node ./test/test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/PitayaX/pitayax-auth.git"
+	},
+	"keywords": [
+    "restful",
+    "express",
+    "mysql",
+    "entity",
+    "rest",
+    "node"
+  ],
+	"author": "Yemol <yemol@pitayax.net>",
+	"license": "ISC",
+	"dependencies": {
+		"babel-runtime": "^5.8.20",
+		"body-parser": "*",
+		"express": "4.*",
+	},
+	"devDependencies": {
+		"babel": "^5.8.23",
+		"babel-eslint": "^4.1.0",
+		"eslint": "^1.2.1",
+		"eslint-plugin-react": "^3.3.0"
+	},
+	"bugs": {
+		"url": "https://github.com/PitayaX/pitayax-auth/issues",
+		"email": "yemol@pitayax.net"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/PitayaX/pitayax-auth.git"
+	},
+	"homepage": "http://www.pitayax.net"
 }
