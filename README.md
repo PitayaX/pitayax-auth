@@ -1,4 +1,4 @@
-# nrest
+# rest
 The restful service to do authenticate. It bases on express + nodejs + MySql.
 
 ## Installation
