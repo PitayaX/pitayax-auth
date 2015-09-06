@@ -1,4 +1,2 @@
-const express = require("express")
-
-const test = "aaa"
-const a = "123"
+require('babel/register')
+require('./src/server')
