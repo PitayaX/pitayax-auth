@@ -1,5 +1,4 @@
-const crypto = require("crypto"),
-  db = require("./db")
+const crypto = require("crypto")
 
 const user = function () {
   	this.id = ""

@@ -3,6 +3,7 @@ import cookie from "cookie-parser"
 import bodyParser from "body-parser"
 import path from "path"
 import config from "./config.json"
+import db from "./db"
 
 const app = express()
 app.set('views', './views')
@@ -18,7 +19,7 @@ app.get("/", function (req, res) {
 })
 
 // API interface
-app.get('/api/get/:userid', user.get)
+app.get('/api/get/:userid', db.users.find)
 
 const server = app.listen(config.port, function () {
     console.log('Listening on port %d', server.address().port)
