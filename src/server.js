@@ -1,11 +1,8 @@
 import express from "express"
 import cookie from "cookie-parser"
 import bodyParser from "body-parser"
-// import api from "./api"
 import path from "path"
-// import user from "./user"
-// import oauth from "./oAuth"
-import site from "./site"
+import config from "./config.json"
 
 const app = express()
 app.set('views', './views')
@@ -15,13 +12,14 @@ app.use(bodyParser())
 // define the path of static files
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/', site.index)
-
-
+// site page interface
+app.get("/", function (req, res) {
+  res.send(config.description + "<br>Current Version: " +  config.version + "<br>Author: " + config.author)
+})
 
 // API interface
-// app.get('/api/get/:userid', user.get)
+app.get('/api/get/:userid', user.get)
 
-const server = app.listen(8002, function () {
+const server = app.listen(config.port, function () {
     console.log('Listening on port %d', server.address().port)
   })

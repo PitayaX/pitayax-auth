@@ -1,0 +1,6 @@
+{
+  "port":8001,
+  "description": "A restful service used to do auth. This is only for pitayax projects.",
+  "version": "0.0.0.1",
+  "author": "Yemol <yemol@pitayax.net>"
+}
