@@ -1,4 +1,4 @@
-const mysql = require('./mysql')
+const mysql = require('./mysqlAdapter')
 
 const organization = function () {
     this.id = ""
