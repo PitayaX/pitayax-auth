@@ -6,5 +6,6 @@
   "view" :
   {
     "default": "default"
-  }
+  },
+  "code_timeout": 10000
 }
