@@ -27,7 +27,8 @@ app.post("/auth", authorization.postAuth)
 app.post("/token", authorization.token)
 
 // API interface
-app.get('/api/user/:userid', user.get)
+app.get("/api/user/:userid", user.get)
+app.get("/api/feed", authorization.feed)
 
 
 const server = app.listen(config.port, function () {
