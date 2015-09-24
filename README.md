@@ -34,12 +34,13 @@ http://location:port/token
 
 Response will be a json with following format.    
 
-> {     
->   "access_token":"a645c550-75f1-4a56-8600-ef12eb04b98d",    
->   "token_type":"pitayax-auth",    
->   "expires_in":3600    
-> }    
-
+```json
+{     
+ "access_token":"a645c550-75f1-4a56-8600-ef12eb04b98d",    
+ "token_type":"pitayax-auth",    
+ "expires_in":3600    
+}    
+```
 
 ### Feed authorization token to check access right
 
@@ -56,11 +57,11 @@ Response will be a json with following format.
 
 ```json
 {     
-|"access_token":"a645c550-75f1-4a56-8600-ef12eb04b98d",    
-|"token_type":"pitayax-auth",    
-|"expires_in":3600    
+  "access_token":"a645c550-75f1-4a56-8600-ef12eb04b98d",    
+  "token_type":"pitayax-auth",    
+  "expires_in":3600    
 }    
-
+```
 
 ## Start Rest Services
 npm start
