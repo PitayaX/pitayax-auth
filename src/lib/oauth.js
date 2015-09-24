@@ -32,10 +32,6 @@ exports.feed = function (req, res) {
   console.log (test)
   console.log (tool.decipher( key.client_key.blog, test ))
 
-  //   const md5 = crypto.createHash("md5")
-  //   md5.update(password)
-  //   const md5Password = md5.digest("hex")
-
   return { "pass": "1" }
 }
 
@@ -45,6 +41,9 @@ exports.reflushKey = function (req, res) {
 
   const refresh_token = req.param("refresh_token")
   const savedAuth = app.locals.cache.get(refresh_token)
+
+  showAllAuthes ()
+  console.log (refresh_token)
 
   // We cannot find code in cache
   if ( savedAuth === null || savedAuth === 'undefined' ) {
@@ -90,7 +89,7 @@ exports.authCode = function (req, res) {
     app.locals.cache.del (code)
     app.locals.cache.put (savedAuth.access_token, savedAuth, config.expires_in)
 
-    // showAllAuthes ()
+    showAllAuthes ()
     res.json( { "access_token": savedAuth.access_token, "token_type": "pitayax-auth", expires_in: config.expires_in })
   }
 }
