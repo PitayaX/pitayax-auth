@@ -21,12 +21,12 @@ exports.feed = function (req, res) {
   const securityKey = req.params.securityKey
   const request = req.params.request
 
-  
+
   const client = req.params.client
   const page = req.params.page
   const section = req.params.section
   const action = req.params.action
-  const securityKey = req.params.securityKey
+
 
   const test = tool.cipher( key.client_key.blog, "test" )
   console.log (test)
