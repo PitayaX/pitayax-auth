@@ -25,11 +25,10 @@ app.get("/", function (req, res) {
 app.get("/auth", authorization.getAuth)
 app.post("/auth", authorization.postAuth)
 app.post("/token", authorization.token)
+app.get("/feed", authorization.feed)
 
 // API interface
 app.get("/api/user/:userid", user.get)
-app.get("/api/feed", authorization.feed)
-
 
 const server = app.listen(config.port, function () {
     console.log('Listening on port %d', server.address().port)

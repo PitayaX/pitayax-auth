@@ -4,7 +4,7 @@ import oauth from "../lib/oauth"
 
 
 exports.feed = function (req, res) {
-  const result = oauth.feed (req, res)
+  const result = oauth.feed (req.get("authorization"), req.get("client"), req.get("page"), req.get("section"), req.get("action"))
   if (result === null || result === 'undefined') {
     res.statusCode = 404
     res.end()
@@ -22,10 +22,26 @@ exports.token = function (req, res) {
 
   switch (granttype) {
   case "authorization_code":
-    oauth.authCode (req, res)
+    oauth.authCode (req.param("code"), req.param("redirect_uri"), req.param("client_id"), function (error, result) {
+      if (error !== null) {
+        res.statusCode = 404
+        res.send (error)
+      }
+      else {
+        res.json (result)
+      }
+    })
     break
   case "refresh_token":
-    oauth.reflushKey (req, res)
+    oauth.reflushKey (req.param("refresh_token"), function (error, result) {
+      if (error === null) {
+        res.json (result)
+      } else {
+        res.statusCode = 404
+        res.send (error)
+        res.end()
+      }
+    })
     break
   default :
     res.statusCode = 404
@@ -38,13 +54,22 @@ exports.token = function (req, res) {
 exports.postAuth = function (req, res) {
   const userName = req.param("userIDTextBox")
   const userPassword = req.param("passwordTextBox")
-  // TODO: We have to check user name and password here.
 
-  const authCache = oauth.grant (req, res)
-  // redirect to return URL with code.
-  res.statusCode = 302
-  res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state)
-  res.end()
+  db.users.checkPassword(userName, userPassword, function (error, result) {
+    if (error == null)
+    {
+      const authCache = oauth.grant (req.query.client_id, req.query.redirect_uri)
+      // redirect to return URL with code.
+      res.statusCode = 302
+      res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state)
+      res.end()
+    }
+    else {
+      res.statusCode = 401
+      res.send("User authorization failed.")
+      res.end()
+    }
+  })
 }
 
 // This method is return user login page
@@ -52,14 +77,22 @@ exports.getAuth = function (req, res) {
   const url_parts = url.parse (req.url, true)
   const query = url_parts.query
 
-  // We will show 404 if current request does not include the query strings that we need.
-  // TODO: In future, we need to check client id and redirect uri here.
-  if (query.response_type !== "code" || query.client_id === undefined || query.state === undefined || query.redirect_uri === undefined)
-  {
-    res.statusCode = 404
-    res.end()
-  }
-  else {
-    res.render("default", {})
-  }
+  db.client.getClient(query.client_id, function (error, result) {
+    if (error !== null) {
+      // We cannot find the client.
+      res.statusCode = 404
+      res.send(error)
+      res.end()
+    } else {
+      // We will show 404 if current request does not include the query strings that we need.
+      if (query.response_type !== "code" || query.state === undefined || query.redirect_uri === undefined)
+      {
+        res.statusCode = 404
+        res.end()
+      }
+      else {
+        res.render("default", {})
+      }
+    }
+  })
 }
