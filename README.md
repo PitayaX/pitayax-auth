@@ -8,7 +8,7 @@ The service to do authenticate. It bases on express + nodejs + MySql.
 ### Get page to do authorization
 
 Access following URL to get authorization page.   
-http://location:port/auth?response_type=&client_id=&state=&redirect_uri=   
+http://server:port/auth?response_type=&client_id=&state=&redirect_uri=   
 
 > response_type: "code"   
 > client_id: The client id of this client.   
@@ -25,7 +25,7 @@ http://redirect_uri?code=&state=
 ### Convert authorization code to authorization token
 
 Do post call to following URL with certain parameters.    
-http://location:port/token    
+http://server:port/token    
 
 > code: Code returned in previous step.  
 > grant_type: "authorization_code"
@@ -48,7 +48,7 @@ Response will be a json with following format.
 ### Refresh authorization token
 
 Do post call to following URL with certain parameters.    
-http://location:port/token  
+http://server:port/token  
 
 > refresh_token: The token that you are holding now.  
 > grant_type: "refresh_token"
@@ -62,6 +62,26 @@ Response will be a json with following format.
   "expires_in":3600    
 }    
 ```
+
+### Feed authorization token
+
+Do get call to following URL with certain parameters.    
+http://server:port/feed  
+
+> authorization: The token that you are holding now.  
+> client: your client id.
+
+Response will be a json with following format.    
+
+```json
+{     
+  "pass":1/0,    
+}    
+```
+
+1 = pass
+0 = does not pass
+
 
 ## Start Rest Services
 npm start
