@@ -2,8 +2,8 @@
 import db from "../db"
 import config from "../config.json"
 
-const showError = function (message, res) {
-  res.render("createAccount", {})
+const showError = function (inputs, res) {
+  res.render("createAccount", inputs)
   res.end()
 }
 
@@ -17,7 +17,7 @@ exports.get = function (req, res) {
       res.json(result)
     }
   })
-
+}
 
 exports.createAccount_get = function (req, res) {
   res.render("createAccount", {})
@@ -29,19 +29,22 @@ exports.createAccount_post = function (req, res) {
   const userEmail = req.param("emailTextBox")
   const nickName = req.param("nicknameTextBox")
   const passcode = req.param("passcodeTextBox")
+  const url_parts = url.parse (req.url, true)
 
   if (passcode !== config.passcode) {
-    showError ("You cannot create account now! Passcode is incorrect!", res)
+    showError ({ "message": "You cannot create account now! Passcode is incorrect!", userID, userPassword, userEmail, nickName, passcode }, res)
   }
   else {
     db.users.create(userID, userPassword, userEmail, nickName, function (result, err) {
       if (result)
       {
-        res.send("Accout Created!")
+        // redirect to return URL with code.
+        res.statusCode = 302
+        res.append('Location', url_parts.query.redirect_uri)
         res.end()
       }
       else {
-        showError (err, res)
+        showError ({ "message": err, userID, userPassword, userEmail, nickName, passcode }, res)
       }
     })
   }

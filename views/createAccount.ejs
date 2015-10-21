@@ -13,13 +13,13 @@
                               <div class="form-group">
                                   <label for="passcodeTextBox" class="col-md-4 control-label">Passcode</label>
                                   <div class="col-md-8">
-                                      <input type="text" class="form-control" name="passcodeTextBox" id="passcodeTextBox" />
+                                      <input type="text" class="form-control" name="passcodeTextBox" id="passcodeTextBox" value="<%= passcode %>" />
                                   </div>
                               </div>
                               <div class="form-group">
                                   <label for="userIDTextBox" class="col-md-4 control-label">UserID</label>
                                   <div class="col-md-8">
-                                      <input type="text" class="form-control" name="userIDTextBox" id="userIDTextBox" />
+                                      <input type="text" class="form-control" name="userIDTextBox" id="userIDTextBox" value="<%= userID %>" />
                                   </div>
                               </div>
                               <div class="form-group">
@@ -31,14 +31,17 @@
                               <div class="form-group">
                                   <label for="emailTextBox" class="col-md-4 control-label">Email</label>
                                   <div class="col-md-8">
-                                      <input type="text" class="form-control" name="emailTextBox" id="emailTextBox" />
+                                      <input type="text" class="form-control" name="emailTextBox" id="emailTextBox" value="<%= userEmail %>" />
                                   </div>
                               </div>
                               <div class="form-group">
                                   <label for="nicknameTextBox" class="col-md-4 control-label">Nick Name</label>
                                   <div class="col-md-8">
-                                      <input type="text" class="form-control" name="nicknameTextBox" id="nicknameTextBox" />
+                                      <input type="text" class="form-control" name="nicknameTextBox" id="nicknameTextBox" value="<%= nickName %>"  />
                                   </div>
+                              </div>
+                              <div class="warning">
+                                  <%= message %>
                               </div>
                               <div class="form-group">
                                   <div class="col-md-offset-4 col-md-8">
