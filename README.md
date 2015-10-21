@@ -79,8 +79,18 @@ Response will be a json with following format.
 }    
 ```
 
-1 = pass
-0 = does not pass
+1 = pass    
+0 = does not pass    
+
+
+### Create Account
+
+Access following URL to create account.   
+http://server:port//user/createaccount?redirect_uri=   
+
+> redirect_uri: recall URL after authorization is done. Used to accept authorization code.   
+
+Once account is created. The page will redirect to redirect_uri.    
 
 
 ## Start Rest Services
