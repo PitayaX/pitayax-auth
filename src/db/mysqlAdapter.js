@@ -25,3 +25,27 @@ exports.ReadData = function (command, callback) {
         }
       })
   }
+
+exports.ExecQuery = function (sql, values, callback) {
+      const connection = mysql.createConnection({
+        host: config["mysqlconnect"],
+        user: config["mysqlUserID"],
+        password: config["mysqlPassword"]
+      })
+
+      connection.connect()
+      console.log (sql)
+      console.log (values)
+      connection.query({
+        sql,
+        timeout: config["timeout"]
+      }, values, function (err, rows, fields) {
+          if (err) {
+            connection.end()
+            callback(false, err)
+          } else {
+            connection.end()
+            callback(true, null)
+          }
+        })
+    }

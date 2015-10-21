@@ -27,6 +27,10 @@ app.post("/auth", authorization.postAuth)
 app.post("/token", authorization.token)
 app.get("/feed", authorization.feed)
 
+// user
+app.get("/user/createAccount", user.createAccount_get)
+app.post("/user/createAccount", user.createAccount_post)
+
 // API interface
 app.get("/api/user/:userid", user.get)
 

@@ -4,14 +4,15 @@ import oauth from "../lib/oauth"
 
 
 exports.feed = function (req, res) {
-  const result = oauth.feed (req.get("authorization"), req.get("client"), req.get("page"), req.get("section"), req.get("action"))
-  if (result === null || result === 'undefined') {
-    res.statusCode = 404
-    res.end()
-  }
-  else {
-    res.json (result)
-  }
+  oauth.feed (req.get("authorization"), req.get("client"), req.get("page"), req.get("section"), req.get("action"), function (result) {
+    if (result === null || result === 'undefined') {
+      res.statusCode = 404
+      res.end()
+    }
+    else {
+      res.json (result)
+    }
+  })
 }
 
 // This is used to:
@@ -58,13 +59,15 @@ exports.postAuth = function (req, res) {
   db.users.checkPassword(userName, userPassword, function (error, result) {
     if (error == null)
     {
-      const authCache = oauth.grant (req.query.client_id, req.query.redirect_uri)
-      // redirect to return URL with code.
-      res.statusCode = 302
-      res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state)
-      res.end()
+      oauth.grant (req.query.client_id, req.query.redirect_uri, function (authCache) {
+        // redirect to return URL with code.
+        res.statusCode = 302
+        res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state)
+        res.end()
+      })
     }
     else {
+      console.log (error)
       res.statusCode = 401
       res.send("User authorization failed.")
       res.end()

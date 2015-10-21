@@ -39,16 +39,16 @@ class AuthCache {
   }
 }
 
-exports.feed = function (authorization, client, page, section, action) {
+exports.feed = function (authorization, client, page, section, action, callback) {
   let savedAuth = new AuthCache ()
   // savedAuth.showAllAuthes ()
   savedAuth = savedAuth.getFromCache (authorization)
   console.log (savedAuth)
 
   if (savedAuth === null || savedAuth.client_id !== client) {
-    return { "pass": "0" }
+    callback({ "pass": "0" })
   } else {
-    return { "pass": "1" }
+    callback({ "pass": "1" })
   }
 }
 
@@ -97,11 +97,11 @@ exports.authCode = function (code, redirect_uri, clientid, callback) {
   }
 }
 
-exports.grant = function (client_id, redurect_uri) {
+exports.grant = function (client_id, redurect_uri, callback) {
   // create authCache entity to save auth info
   const authCache = new AuthCache ()
   authCache.code = uuid.v4()
   authCache.redirect_uri = redurect_uri
   authCache.client_id = client_id
-  return authCache.pushToCache (authCache.code)
+  callback(authCache.pushToCache (authCache.code))
 }

@@ -8,5 +8,6 @@
     "default": "default"
   },
   "code_timeout": 600000,
-  "expires_in": 36000
+  "expires_in": 36000,
+  "passcode": "12qwaszx./"
 }
