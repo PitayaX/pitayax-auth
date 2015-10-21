@@ -20,7 +20,7 @@ exports.get = function (req, res) {
 }
 
 exports.createAccount_get = function (req, res) {
-  res.render("createAccount", {})
+  res.render("createAccount", { message: "", userID: "", userPassword: "", userEmail: "", nickName: "", passcode: "" })
 }
 
 exports.createAccount_post = function (req, res) {

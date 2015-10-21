@@ -3,7 +3,6 @@ import url from "url"
 import uuid from "node-uuid"
 import app from "./app"
 import config from "../config.json"
-import key from "./config.json"
 import tool from "./tool"
 
 

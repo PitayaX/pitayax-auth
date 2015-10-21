@@ -2,4 +2,6 @@
   "mysqlconnect":"",
   "mysqlUserID":"",
   "mysqlPassword":""
+  "databaseName":"",
+  "timeout": 40000
 }
