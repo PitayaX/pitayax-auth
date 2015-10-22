@@ -12,3 +12,7 @@ exports.decipher = function (key, content) {
     decipher.update(content, 'hex', 'utf8')
     return decipher.final('utf8')
   }
+
+exports.cross_domain = function (req, res) {
+    res.set('Access-Control-Allow-Origin', '*')
+  }

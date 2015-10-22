@@ -8,6 +8,7 @@ import user from "./routes/user"
 import authorization from "./routes/authorization"
 import cache from "memory-cache"
 import app from "./lib/app"
+import tool from "./lib/tool"
 
 app.set("views", "./views")
 app.set('view engine', 'ejs')

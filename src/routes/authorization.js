@@ -29,6 +29,7 @@ exports.token = function (req, res) {
         res.send (error)
       }
       else {
+        res.set('Access-Control-Allow-Origin', '*')
         res.json (result)
       }
     })
@@ -36,6 +37,7 @@ exports.token = function (req, res) {
   case "refresh_token":
     oauth.reflushKey (req.param("refresh_token"), function (error, result) {
       if (error === null) {
+        res.set('Access-Control-Allow-Origin', '*')
         res.json (result)
       } else {
         res.statusCode = 404
