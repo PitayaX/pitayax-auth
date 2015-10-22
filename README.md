@@ -28,8 +28,8 @@ Do post call to following URL with certain parameters.
 http://server:port/token    
 
 > code: Code returned in previous step.  
-> grant_type: "authorization_code"
-> state: post to authorization server and will send back once authorization is done.   
+> grant_type: "authorization_code"   
+> client_id: The client id of this client.      
 > redirect_uri: recall URL after authorization is done. Used to accept authorization code.   
 
 Response will be a json with following format.    
