@@ -25,14 +25,23 @@ app.get("/", function (req, res) {
 // user authorization page
 app.get("/auth", authorization.getAuth)
 app.post("/auth", authorization.postAuth)
+
 app.post("/token", authorization.token)
+app.options("/token", function (req, res) {
+  console.log ("Enter option request!")
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Methods", "HEAD, GET, POST, PUT, DELETE, OPTIONS")
+  res.setHeader("Access-Control-Allow-Credentials", "true")
+  res.setHeader("Access-Control-Max-Age", "3628800")
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Token") 
+  res.end()
+})
+
 app.get("/feed", authorization.feed)
 
 // user
 app.get("/user/createAccount", user.createAccount_get)
 app.post("/user/createAccount", user.createAccount_post)
-
-// API interface
 app.get("/api/user/:userid", user.get)
 
 const server = app.listen(config.port, function () {

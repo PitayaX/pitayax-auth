@@ -19,6 +19,8 @@ exports.feed = function (req, res) {
 // 1. Get auth token from code
 // 2. Refresh token
 exports.token = function (req, res) {
+  console.log ("Enter post request!")
+
   const granttype = req.param("grant_type")
 
   switch (granttype) {
@@ -30,6 +32,9 @@ exports.token = function (req, res) {
       }
       else {
         res.set('Access-Control-Allow-Origin', '*')
+        res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        res.set('Access-Control-Allow-Headers', 'X-PINGOTHER')
+        res.set('Access-Control-Max-Age', '1728000')
         res.json (result)
       }
     })
