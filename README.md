@@ -75,7 +75,7 @@ Response will be a json with following format.
 
 ```json
 {     
-  "pass":1/0,    
+  "pass":1 or 0,    
 }    
 ```
 
@@ -98,3 +98,6 @@ npm start
 
 ## How to test
 npm test
+
+## How to setup database
+npm run initDatabase

@@ -1,4 +1,4 @@
-import db from "../db"
+import { user, client } from "../DynamoDB"
 import url from "url"
 import oauth from "../lib/oauth"
 
@@ -25,19 +25,25 @@ exports.token = function (req, res) {
 
   switch (granttype) {
   case "authorization_code":
-    oauth.authCode (req.param("code"), req.param("redirect_uri"), req.param("client_id"), function (error, result) {
-      if (error !== null) {
-        res.statusCode = 404
-        res.send (error)
-      }
-      else {
-        res.set('Access-Control-Allow-Origin', '*')
-        res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-        res.set('Access-Control-Allow-Headers', 'X-PINGOTHER')
-        res.set('Access-Control-Max-Age', '1728000')
-        res.json (result)
-      }
-    })
+    try {
+      oauth.authCode (req.param("code"), req.param("redirect_uri"), req.param("client_id"), function (error, result) {
+        if (error !== null) {
+          res.statusCode = 404
+          res.send (error)
+        }
+        else {
+          res.set('Access-Control-Allow-Origin', '*')
+          res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+          res.set('Access-Control-Allow-Headers', 'X-PINGOTHER')
+          res.set('Access-Control-Max-Age', '1728000')
+          res.json (result)
+        }
+      })
+    } catch (e) {
+      console.log ("error:" + e)
+      res.statusCode = 404
+      res.send (error)
+    }
     break
   case "refresh_token":
     oauth.reflushKey (req.param("refresh_token"), function (error, result) {
@@ -60,24 +66,23 @@ exports.token = function (req, res) {
 
 // This is method use to save code and return to redirect uri with generated code
 exports.postAuth = function (req, res) {
-  const userName = req.param("userIDTextBox")
+  const userEmail = req.param("emailTextBox")
   const userPassword = req.param("passwordTextBox")
 
-  db.users.checkPassword(userName, userPassword, function (error, result) {
+  user.check(userEmail, userPassword, function (error, result) {
     if (error == null)
     {
-      oauth.grant (req.query.client_id, req.query.redirect_uri, function (authCache) {
+      oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
         // redirect to return URL with code.
         res.statusCode = 302
-        res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state)
+        res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state + "&email=" + authCache.email)
         res.end()
       })
     }
     else {
       console.log (error)
-      res.statusCode = 401
-      res.send("User authorization failed.")
-      res.end()
+      console.log ("user info is: email=" + userEmail + " password=" + userPassword)
+      res.render("login", { warning: "登录失败！用户不存在或者密码错误." } )
     }
   })
 }
@@ -87,11 +92,11 @@ exports.getAuth = function (req, res) {
   const url_parts = url.parse (req.url, true)
   const query = url_parts.query
 
-  db.client.getClient(query.client_id, function (error, result) {
+  client.find(query.client_id, function (error, result) {
     if (error !== null) {
       // We cannot find the client.
       res.statusCode = 404
-      res.send(error)
+      res.send("非法的client id.")
       res.end()
     } else {
       // We will show 404 if current request does not include the query strings that we need.
@@ -101,7 +106,7 @@ exports.getAuth = function (req, res) {
         res.end()
       }
       else {
-        res.render("default", {})
+        res.render("login", { warning: "" } )
       }
     }
   })

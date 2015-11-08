@@ -1,0 +1,53 @@
+<html>
+<% include head %>
+    <body style="overflow:hidden">
+        <div class="container-fluid">
+          <form class="form-horizontal" method="post" style="margin-top:1em">
+            <div class="row" style="margin-bottom:1em">
+              <div class="col-md-9 col-md-offset-1">
+                <div class="input-group">
+                  <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></span>
+                  <input style="display:none"><input type="text" class="form-control" name="emailTextBox" id="emailTextBox" placeholder="邮箱" autocomplete="off"  />
+                </div>
+              </div>
+            </div>
+            <div class="row"  style="margin-bottom:1.5em">
+              <div class="col-md-9 col-md-offset-1">
+                <div class="input-group">
+                  <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+                  <input style="display:none"><input type="password" class="form-control" name="passwordTextBox" id="passwordTextBox" placeholder="密码" autocomplete="off"  />
+                </div>
+              </div>
+            </div>
+            <div class="row"  style="margin-bottom:0.2em">
+              <div class="col-md-9 col-md-offset-1">
+                  <button type="submit" class="btn btn-success" style="width:100%"><strong>登录</strong></button>
+              </div>
+            </div>
+            <div class="form-group" >
+              <div class="col-md-offset-1 col-md-4 col-xs-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox">记住我
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-5 text-right col-xs-6">
+                <div class="checkbox">
+                  忘记密码
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <script>
+          function showWarning (message) {
+            if (message != "") {
+              $("#error").html(message)
+            }
+          }
+          showWarning ('<%= warning %>')
+        </script>
+    </body>
+</html>

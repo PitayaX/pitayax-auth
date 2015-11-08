@@ -6,3 +6,4 @@
 npm-debug.log
 /src/db/config.json
 /src/lib/config.json
+credentials.json

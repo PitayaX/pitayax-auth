@@ -12,6 +12,7 @@ class AuthCache {
     this.redirect_uri = ""
     this.client_id = ""
     this.access_token = ""
+    this.user_id = ""
   }
 
   pushToCache (key) {
@@ -43,6 +44,8 @@ exports.feed = function (authorization, client, page, section, action, callback)
   // savedAuth.showAllAuthes ()
   savedAuth = savedAuth.getFromCache (authorization)
   console.log (savedAuth)
+  console.log (savedAuth.client_id)
+  console.log (client)
 
   if (savedAuth === null || savedAuth.client_id !== client) {
     callback({ "pass": "0" })
@@ -73,34 +76,40 @@ exports.reflushKey = function (refresh_token,  callback) {
 // This method is used to conver a auth code to auth token
 exports.authCode = function (code, redirect_uri, clientid, callback) {
   console.log ("Do authorizate.")
-  const savedAuth = new AuthCache ().getFromCache (code)
+  try {
+    const savedAuth = new AuthCache ().getFromCache (code)
 
-  // We cannot find code in cache
-  if ( savedAuth === null || savedAuth === 'undefined' ) {
-    callback ("We cannot find the auth info.", null)
-  }
-  // The URL is different from we saved URL
-  else if ( savedAuth.redirect_uri !== redirect_uri ) {
-    callback ("Redirect URI has been changed.", null)
-  }
-  // The Client ID is different from we saved Client ID
-  else if ( savedAuth.client_id !== clientid ) {
-    callback ("Client id has been changed.", null)
-  }
-  else {
-    savedAuth.removeFromCache  (savedAuth.access_token)
-    savedAuth.access_token = uuid.v4()
-    savedAuth.pushToCache (savedAuth.access_token)
-    savedAuth.showAllAuthes ()
-    callback (null, { "access_token": savedAuth.access_token, "token_type": "pitayax-auth", expires_in: config.expires_in })
+    // We cannot find code in cache
+    if ( savedAuth === null || savedAuth === 'undefined' ) {
+      callback ("We cannot find the auth info.", null)
+    }
+    // The URL is different from we saved URL
+    else if ( savedAuth.redirect_uri !== redirect_uri ) {
+      callback ("Redirect URI has been changed.", null)
+    }
+    // The Client ID is different from we saved Client ID
+    else if ( savedAuth.client_id !== clientid ) {
+      callback ("Client id has been changed.", null)
+    }
+    else {
+      savedAuth.removeFromCache  (savedAuth.access_token)
+      savedAuth.access_token = uuid.v4()
+      savedAuth.pushToCache (savedAuth.access_token)
+      savedAuth.showAllAuthes ()
+      callback (null, { "access_token": savedAuth.access_token, "token_type": "pitayax-auth", expires_in: config.expires_in })
+    }
+  } catch (e) {
+    console.log ("error:" + e)
+    callback (null, { error: e })
   }
 }
 
-exports.grant = function (client_id, redurect_uri, callback) {
+exports.grant = function (client_id, redurect_uri, user_id, callback) {
   // create authCache entity to save auth info
   const authCache = new AuthCache ()
   authCache.code = uuid.v4()
   authCache.redirect_uri = redurect_uri
   authCache.client_id = client_id
+  authCache.user_id = user_id
   callback(authCache.pushToCache (authCache.code))
 }
