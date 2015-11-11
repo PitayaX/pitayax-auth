@@ -32,10 +32,6 @@ exports.token = function (req, res) {
           res.send (error)
         }
         else {
-          res.set('Access-Control-Allow-Origin', '*')
-          res.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-          res.set('Access-Control-Allow-Headers', 'X-PINGOTHER')
-          res.set('Access-Control-Max-Age', '1728000')
           res.json (result)
         }
       })
@@ -64,6 +60,28 @@ exports.token = function (req, res) {
 
 }
 
+exports.remoteAuth = (req, res) => {
+  const userEmail = req.param("email")
+  const userPassword = req.param("password")
+
+  user.check(userEmail, userPassword, function (error, result) {
+    if (error == null)
+    {
+      oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
+        // redirect to return URL with code.
+        res.json({ "error": "", "code": authCache.code, "email": authCache.user_email })
+        res.end()
+      })
+    }
+    else {
+      console.log (error)
+      console.log ("user info is: email=" + userEmail + " password=" + userPassword)
+      res.json({ error, "code": "", "email": "" })
+    }
+  })
+}
+
+
 // This is method use to save code and return to redirect uri with generated code
 exports.postAuth = function (req, res) {
   const userEmail = req.param("emailTextBox")
@@ -75,7 +93,7 @@ exports.postAuth = function (req, res) {
       oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
         // redirect to return URL with code.
         res.statusCode = 302
-        res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state + "&email=" + authCache.email)
+        res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state + "&email=" + authCache.user_email)
         res.end()
       })
     }

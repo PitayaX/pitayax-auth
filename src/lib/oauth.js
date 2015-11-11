@@ -12,7 +12,7 @@ class AuthCache {
     this.redirect_uri = ""
     this.client_id = ""
     this.access_token = ""
-    this.user_id = ""
+    this.user_email = ""
   }
 
   pushToCache (key) {
@@ -104,12 +104,12 @@ exports.authCode = function (code, redirect_uri, clientid, callback) {
   }
 }
 
-exports.grant = function (client_id, redurect_uri, user_id, callback) {
+exports.grant = function (client_id, redurect_uri, user_email, callback) {
   // create authCache entity to save auth info
   const authCache = new AuthCache ()
   authCache.code = uuid.v4()
   authCache.redirect_uri = redurect_uri
   authCache.client_id = client_id
-  authCache.user_id = user_id
+  authCache.user_email = user_email
   callback(authCache.pushToCache (authCache.code))
 }

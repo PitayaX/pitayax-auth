@@ -3,48 +3,38 @@
     <body>
         <div class="container-fluid" >
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-5 col-xs-10 col-sm-7">
                     <div class="panel-body">
                         <form class="form-horizontal" method="post">
                           <div class="form-group">
-                              <div class="col-md-10">
-                                <div class="input-group">
-                                  <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span></span>
-                                  <input style="display:none"><input type="text" class="form-control" name="passcodeTextBox" id="passcodeTextBox" value="<%= passcode %>" placeholder="邀请码" />
-                                </div>
+                              <div class="input-group">
+                                <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span></span>
+                                <input style="display:none"><input type="text" class="form-control" name="passcodeTextBox" id="passcodeTextBox" value="<%= passcode %>" placeholder="邀请码" />
                               </div>
                           </div>
                           <div class="form-group">
-                              <div class="col-md-10">
-                                <div class="input-group">
-                                  <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></span>
-                                  <input style="display:none"><input type="text" class="form-control" name="emailTextBox" id="emailTextBox" value="<%= userEmail %>" placeholder="邮箱"  />
-                                </div>
+                              <div class="input-group">
+                                <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></span>
+                                <input style="display:none"><input type="text" class="form-control" name="emailTextBox" id="emailTextBox" value="<%= userEmail %>" placeholder="邮箱"  />
                               </div>
                           </div>
                           <div class="form-group">
-                              <div class="col-md-10">
-                                <div class="input-group">
-                                  <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
-                                  <input style="display:none"><input type="text" class="form-control" name="nicknameTextBox" id="nicknameTextBox" value="<%= nickName %>" placeholder="昵称"  />
-                                </div>
+                              <div class="input-group">
+                                <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+                                <input style="display:none"><input type="text" class="form-control" name="nicknameTextBox" id="nicknameTextBox" value="<%= nickName %>" placeholder="昵称"  />
                               </div>
                           </div>
                           <div class="form-group">
-                              <div class="col-md-10">
-                                <div class="input-group">
-                                  <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
-                                  <input style="display:none"><input type="password" class="form-control" name="passwordTextBox" id="passwordTextBox" placeholder="密码"  />
-                                </div>
+                              <div class="input-group">
+                                <span class="input-group-addon" id="userID-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+                                <input style="display:none"><input type="password" class="form-control" name="passwordTextBox" id="passwordTextBox" placeholder="密码"  />
                               </div>
                           </div>
                           <div class="warning">
                               <%= message %>
                           </div>
                           <div class="form-group">
-                              <div class="col-md-10">
-                                  <button type="submit" class="btn btn-success" style="width:100%">创建帐户</button>
-                              </div>
+                              <button type="submit" class="btn btn-success" style="width:100%">创建帐户</button>
                           </div>
                         </form>
                     </div>

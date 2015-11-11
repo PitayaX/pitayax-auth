@@ -9,7 +9,7 @@ import authorization from "./routes/authorization"
 import cache from "memory-cache"
 import app from "./lib/app"
 import tool from "./lib/tool"
-
+import cors from "cors"
 
 app.set("views", "./views")
 app.set('view engine', 'ejs')
@@ -27,16 +27,11 @@ app.get("/", function (req, res) {
 app.get("/auth", authorization.getAuth)
 app.post("/auth", authorization.postAuth)
 
-app.post("/token", authorization.token)
-app.options("/token", function (req, res) {
-  console.log ("Enter option request!")
-  res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader("Access-Control-Allow-Methods", "HEAD, GET, POST, PUT, DELETE, OPTIONS")
-  res.setHeader("Access-Control-Allow-Credentials", "true")
-  res.setHeader("Access-Control-Max-Age", "3628800")
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Token")
-  res.end()
-})
+app.post("/remote/auth", cors(), authorization.remoteAuth)
+app.options("/remote/auth", cors(), (req, res) => {  res.end() })
+
+app.post("/token", cors(), authorization.token)
+app.options("/token", cors(), (req, res) => {  res.end() })
 
 app.get("/feed", authorization.feed)
 
