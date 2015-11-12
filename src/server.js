@@ -11,6 +11,7 @@ import app from "./lib/app"
 import tool from "./lib/tool"
 import cors from "cors"
 
+
 app.set("views", "./views")
 app.set('view engine', 'ejs')
 app.use(cookie())
@@ -23,22 +24,31 @@ app.locals.cache = cache
 app.get("/", function (req, res) {
   res.send(config.description + "<br>Current Version: " +  config.version + "<br>Author: " + config.author)
 })
+
 // user authorization page
-app.get("/auth", authorization.getAuth)
-app.post("/auth", authorization.postAuth)
+app.route('/auth')
+  .get(authorization.getAuth)
+  .post(authorization.postAuth)
 
-app.post("/remote/auth", cors(), authorization.remoteAuth)
-app.options("/remote/auth", cors(), (req, res) => {  res.end() })
-
-app.post("/token", cors(), authorization.token)
-app.options("/token", cors(), (req, res) => {  res.end() })
+app.route('/token')
+  .options(cors(), (req, res) => {  res.end() })
+  .post(cors(), authorization.token)
 
 app.get("/feed", authorization.feed)
 
-// user
-app.get("/user/createAccount", user.createAccount_get)
-app.post("/user/createAccount", user.createAccount_post)
-app.get("/api/user/:userid", user.get)
+// Interface to do remote auth.
+// Accept post auth info from other site.
+app.route('/remote/auth')
+  .options(cors(), (req, res) => {  res.end() })
+  .post(cors(), (req, res) => { tool.remoteValidation(req, res, authorization.remoteAuth) })
+
+// Create account page routing
+app.route('/user/createAccount')
+  .get(user.createAccount_get)
+  .post(user.createAccount_post)
+
+// Get user info routing
+app.get("/api/user/:email", user.get)
 
 const server = app.listen(config.port, function (error) {
     console.log('Listening on port %d', server.address().port)
