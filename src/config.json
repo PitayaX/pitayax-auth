@@ -10,6 +10,7 @@
   "code_timeout": 600000,
   "expires_in": 36000,
   "passcode": "12qwaszx./",
+  "remotePasscode": "56tyghbn./-=",
   "allowHost": {
     "1": "localhost"
   }

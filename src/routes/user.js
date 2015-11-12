@@ -16,8 +16,8 @@ const showError = function (inputs, res) {
 }
 
 exports.get = function (req, res) {
-  const userid = req.params.userid
-  db.users.find(userid, function (error, result) {
+  const userEmail = req.params.email
+  user.find(userEmail, function (error, result) {
     if (error != null) {
       res.statusCode = 404
       return res.send('Error 404: ' + error)

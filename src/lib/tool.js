@@ -1,5 +1,5 @@
 import crypto from "crypto"
-
+import config from "../config.json"
 
 exports.cipher = function (key, content) {
     const cip = crypto.createCipher("aes-256-cbc", key)
@@ -16,3 +16,13 @@ exports.decipher = function (key, content) {
 exports.cross_domain = function (req, res) {
     res.set('Access-Control-Allow-Origin', '*')
   }
+
+exports.remoteValidation = (req, res, next) => {
+  const passcode = req.get("passcode")
+  if (passcode === config.remotePasscode) {
+    next (req, res)
+  } else {
+    res.statusCode = 404
+    res.end()
+  }
+}

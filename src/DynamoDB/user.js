@@ -15,7 +15,7 @@ class User {
   fill (item) {
     console.log ("start fill")
     this.email = item.email
-    this.nickName = item.nickName
+    this.nickname = item.nickname
     this.password = item.password
     console.log (this)
     return this
@@ -81,9 +81,9 @@ exports.find = function (email, done) {
   const user = new User()
   user.email = email
   user.get ((error, data) => {
-    if (error === null && result !== null && result.Count !== 0)
+    if (error === null && data !== null && data.Count !== 0)
     {
-      user.fill (result.Items[0])
+      user.fill (data.Items[0])
       done(null, user)
     } else {
       done(cannot_find_user, null)
