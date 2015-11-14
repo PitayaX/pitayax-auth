@@ -1,14 +1,6 @@
-import { user } from "../DynamoDB"
+import { User } from "../db"
 import config from "../config.json"
 import url from "url"
-
-
-const inAllowHost = function (host) {
-  for  (const one in config.allowHost) {
-    if (config.allowHost[one].toLowerCase() === host.toLowerCase()) return true
-  }
-  return false
-}
 
 const showError = function (inputs, res) {
   res.render("createAccount", inputs)
@@ -30,6 +22,7 @@ exports.get = function (req, res) {
 exports.createAccount_get = function (req, res) {
   const url_parts = url.parse (req.url, true)
   const query = url_parts.query
+
   // We will show 404 if current request does not include the query strings that we need.
   if (query.redirect_uri === undefined)
   {
@@ -46,27 +39,32 @@ exports.createAccount_post = function (req, res) {
   const userPassword = req.param("passwordTextBox")
   const userEmail = req.param("emailTextBox")
   const passcode = req.param("passcodeTextBox")
-  const url_parts = req.query.redirect_uri
+  const redirect_uri = req.query.redirect_uri
 
-  // we only accept post request from given host
-  if ( !inAllowHost (req.hostname) ) {
+  if (nickName === undefined || userPassword === undefined || userEmail === undefined || passcode === undefined || redirect_uri === undefined ) {
     res.statusCode = 404
+    res.json({ "error": "please including userEmail, passcode, nickName and userPassword.", "data": "" })
     res.end()
   }
+
   // we need to check passcode to make sure the form is verified
   if (passcode !== config.passcode) {
     showError ({ "message": "You cannot create account now! Passcode is incorrect!", userPassword, userEmail, nickName, passcode }, res)
   }
   else {
-    user.insert(nickName, userPassword, userEmail, function (err, result) {
+    const user = new User()
+    user.email = userEmail
+    user.nickname = nickName
+    user.password = userPassword
+
+    user.add((err, result) => {
       if (err === null)
       {
         // redirect to return URL with code.
-        const location = url_parts
-        console.log (location)
+        const location = redirect_uri
         res.statusCode = 302
-        res.append("Location", location)
-        res.append("email", userEmail)
+        res.append("Location")
+        res.append("data", user)
         res.end()
       }
       else {

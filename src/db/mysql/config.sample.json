@@ -1,0 +1,10 @@
+{
+  "mysqlconnect": "",
+  "mysqlUserID": "",
+  "mysqlPassword": "",
+  "databaseName": "",
+  "timeout": 40000,
+  "DynamoDB_User": "",
+  "DynamoDB_Password": "",
+  "DynamoDB_SignIn": ""
+}

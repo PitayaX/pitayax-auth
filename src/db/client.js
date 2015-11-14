@@ -1,35 +1,36 @@
-import mysql from "./mysqlAdapter"
-import config from './config.json'
+import mysql from "./mysql/mysqlAdapter"
+import config from './mysql/config.json'
+import app from '../lib/app.js'
 
-class Client {
-
+export default class Client {
   constructor () {
-    this.clientID = ""
-    this.clientName = ""
+    this.id = ""
+    this.code = ""
+    this.name = ""
   }
 
-  fillClient (row) {
-    this.clientID = row.ClientID
-    this.clientName = row.ClientName
-    return this
-  }
-}
-
-
-exports.getClient = function (clientID, done) {
-  mysql.ReadData("\
-    SELECT\
-      `ClientID`,\
-      `ClientName`\
-      FROM `" + config.databaseName + "`.`client`\
-    WHERE ClientID = '" + clientID + "' ", function (rows, err) {
-    if (err != null) {
-      return done(err, null)
-    } else if (rows == null) {
-      return done("No client found", null)
-    } else {
-      const client = new Client ()
-      return done(null, client.fillClient(rows[0]))
+  fill (row) {
+    if (row !== null && row !== undefined) {
+      this.id = row.id
+      this.code = row.code
+      this.name = row.name
+      app.logger.info (JSON.stringify(this), "Client.fill")
+      return this
     }
-  })
+  }
+
+  get (done) {
+    mysql.createConnection().query("\
+      SELECT * FROM `" + config.databaseName + "`.`client` WHERE `code` = ?", [ this.code ],
+      (err, result) => {
+        if (err != null) {
+          return done(err, null)
+        } else if (result === null || result.length === 0) {
+          return done("No client found", null)
+        } else {
+          const client = new Client()
+          return done(null, client.fill(result[0]))
+        }
+      })
+  }
 }

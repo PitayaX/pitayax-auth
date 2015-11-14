@@ -1,6 +1,7 @@
-import { user, client } from "../DynamoDB"
+import { User, Client } from "../db"
 import url from "url"
 import oauth from "../lib/oauth"
+import app from '../lib/app.js'
 
 
 exports.feed = function (req, res) {
@@ -63,11 +64,24 @@ exports.token = function (req, res) {
 exports.remoteAuth = (req, res) => {
   const userEmail = req.param("email")
   const userPassword = req.param("password")
+  const passcode = req.param("passcode")
 
-  user.check(userEmail, userPassword, function (error, result) {
+  // We will show 404 if current request does not include the query strings that we need.
+  if (userEmail === undefined || userPassword === undefined || passcode === undefined)
+  {
+    res.statusCode = 404
+    res.json({ "error": "please including userEmail, userPassword, and passcode.", "data": "" })
+    res.end()
+  }
+
+  const user = new User()
+  user.email = userEmail
+  user.password = userPassword
+
+  user.checkPassword(userEmail, userPassword, function (error, result) {
     if (error == null)
     {
-      oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
+      oauth.grant (req.query.client_id, "", userEmail, function (authCache) {
         // redirect to return URL with code.
         res.json({ "error": "", "code": authCache.code, "email": authCache.user_email })
         res.end()
@@ -87,7 +101,19 @@ exports.postAuth = function (req, res) {
   const userEmail = req.param("emailTextBox")
   const userPassword = req.param("passwordTextBox")
 
-  user.check(userEmail, userPassword, function (error, result) {
+  // We will show 404 if current request does not include the query strings that we need.
+  if (userEmail === undefined || userPassword === undefined)
+  {
+    res.statusCode = 404
+    res.json({ "error": "please including userEmail and userPassword.", "data": "" })
+    res.end()
+  }
+
+  const user = new User()
+  user.email = userEmail
+  user.password = userPassword
+
+  user.checkPassword(function (error, result) {
     if (error == null)
     {
       oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
@@ -98,8 +124,8 @@ exports.postAuth = function (req, res) {
       })
     }
     else {
-      console.log (error)
-      console.log ("user info is: email=" + userEmail + " password=" + userPassword)
+      app.logger.error ("User login failed. Data is following ", "authorization.postAuth")
+      app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.postAuth")
       res.render("login", { warning: "登录失败！用户不存在或者密码错误." } )
     }
   })
@@ -110,22 +136,28 @@ exports.getAuth = function (req, res) {
   const url_parts = url.parse (req.url, true)
   const query = url_parts.query
 
-  client.find(query.client_id, function (error, result) {
+  // We will show 404 if current request does not include the query strings that we need.
+  if (query.response_type === undefined || query.response_type !== "code"
+      || query.state === undefined || query.redirect_uri === undefined || query.client_id === undefined)
+  {
+    res.statusCode = 404
+    res.json({ "error": "please including querystring client_id, response_type, state, and redirect_uri.", "data": "" })
+    res.end()
+  }
+
+  // Init client
+  const client = new Client()
+  client.code = query.client_id
+
+  client.get(function (error, result) {
     if (error !== null) {
       // We cannot find the client.
+      app.logger.info (JSON.stringify(client), "authorization.getAuth")
       res.statusCode = 404
-      res.send("非法的client id.")
+      res.json({ "error": "Client id is incorrect.", "data": "" })
       res.end()
     } else {
-      // We will show 404 if current request does not include the query strings that we need.
-      if (query.response_type !== "code" || query.state === undefined || query.redirect_uri === undefined)
-      {
-        res.statusCode = 404
-        res.end()
-      }
-      else {
-        res.render("login", { warning: "" } )
-      }
+      res.render("login", { warning: "" } )
     }
   })
 }

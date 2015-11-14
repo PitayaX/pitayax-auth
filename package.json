@@ -31,17 +31,18 @@
     "cors": "^2.7.1",
     "ejs": "^2.3.4",
     "express": "4.*",
-    "material-ui": "^0.13.1",
     "memory-cache": "^0.1.4",
     "mysql": "^2.9.0",
     "node-uuid": "^1.4.3",
+    "pitayax-service-core": "^1.1.6",
     "react": "^0.14.2",
     "react-addons-create-fragment": "^0.14.2",
     "react-addons-pure-render-mixin": "^0.14.2",
     "react-addons-transition-group": "^0.14.2",
     "react-addons-update": "^0.14.2",
     "react-dom": "^0.14.2",
-    "react-tap-event-plugin": "^0.2.1"
+    "react-tap-event-plugin": "^0.2.1",
+    "superagent": "^1.4.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",

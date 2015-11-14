@@ -12,6 +12,11 @@ import tool from "./lib/tool"
 import cors from "cors"
 
 
+const Logger = require('pitayax-service-core').Logger
+const outputter = Logger.createFileOutputter(path.join(__dirname, '/output.log'))
+console.log (path.join(__dirname, '/output.log'))
+app.logger = new Logger(outputter)
+
 app.set("views", "./views")
 app.set('view engine', 'ejs')
 app.use(cookie())
@@ -51,5 +56,5 @@ app.route('/user/createAccount')
 app.get("/api/user/:email", user.get)
 
 const server = app.listen(config.port, function (error) {
-    console.log('Listening on port %d', server.address().port)
-  })
+  console.log('Listening on port %d', server.address().port)
+})

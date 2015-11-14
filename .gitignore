@@ -4,6 +4,7 @@
 /bower_components/
 /node_modules/
 npm-debug.log
-/src/db/config.json
+/src/db/mysql/config.json
 /src/lib/config.json
 credentials.json
+/src/OTCDB/config.json

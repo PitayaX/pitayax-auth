@@ -1,2 +1,2 @@
-exports.users = require('./users')
-exports.client = require('./client')
+exports.User = require('./User.js')
+exports.Client = require('./Client.js')
