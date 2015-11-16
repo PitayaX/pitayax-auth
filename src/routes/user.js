@@ -19,14 +19,14 @@ exports.get = function (req, res) {
   })
 }
 
-exports.createAccount_get = function (req, res) {
+exports.create_get = function (req, res) {
   const url_parts = url.parse (req.url, true)
   const query = url_parts.query
 
   // We will show 404 if current request does not include the query strings that we need.
   if (query.redirect_uri === undefined)
   {
-    res.statusCode = 404
+    res.statusCode = 400
     res.send ("Please add redirect_uri to your query string.")
     res.end()
   } else {
@@ -34,7 +34,7 @@ exports.createAccount_get = function (req, res) {
   }
 }
 
-exports.createAccount_post = function (req, res) {
+exports.create_post = function (req, res) {
   const nickName = req.param("nicknameTextBox")
   const userPassword = req.param("passwordTextBox")
   const userEmail = req.param("emailTextBox")
@@ -42,7 +42,7 @@ exports.createAccount_post = function (req, res) {
   const redirect_uri = req.query.redirect_uri
 
   if (nickName === undefined || userPassword === undefined || userEmail === undefined || passcode === undefined || redirect_uri === undefined ) {
-    res.statusCode = 404
+    res.statusCode = 400
     res.json({ "error": "please including userEmail, passcode, nickName and userPassword.", "data": "" })
     res.end()
   }
@@ -61,9 +61,8 @@ exports.createAccount_post = function (req, res) {
       if (err === null)
       {
         // redirect to return URL with code.
-        const location = redirect_uri
-        res.statusCode = 302
-        res.append("Location")
+        res.statusCode = 204
+        res.append("Location", redirect_uri)
         res.append("data", user)
         res.end()
       }

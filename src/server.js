@@ -16,6 +16,8 @@ const Logger = require('pitayax-service-core').Logger
 const outputter = Logger.createFileOutputter(path.join(__dirname, '/output.log'))
 console.log (path.join(__dirname, '/output.log'))
 app.logger = new Logger(outputter)
+app.logger.setLogLevel(config.log_level)
+
 
 app.set("views", "./views")
 app.set('view engine', 'ejs')
@@ -49,8 +51,8 @@ app.route('/remote/auth')
 
 // Create account page routing
 app.route('/user/createAccount')
-  .get(user.createAccount_get)
-  .post(user.createAccount_post)
+  .get(user.create_get)
+  .post(user.create_post)
 
 // Get user info routing
 app.get("/api/user/:email", user.get)

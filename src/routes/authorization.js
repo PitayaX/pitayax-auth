@@ -7,7 +7,7 @@ import app from '../lib/app.js'
 exports.feed = function (req, res) {
   oauth.feed (req.get("authorization"), req.get("client"), req.get("page"), req.get("section"), req.get("action"), function (result) {
     if (result === null || result === 'undefined') {
-      res.statusCode = 404
+      res.statusCode = 400
       res.end()
     }
     else {
@@ -29,7 +29,7 @@ exports.token = function (req, res) {
     try {
       oauth.authCode (req.param("code"), req.param("redirect_uri"), req.param("client_id"), function (error, result) {
         if (error !== null) {
-          res.statusCode = 404
+          res.statusCode = 401
           res.send (error)
         }
         else {
@@ -38,7 +38,7 @@ exports.token = function (req, res) {
       })
     } catch (e) {
       console.log ("error:" + e)
-      res.statusCode = 404
+      res.statusCode = 400
       res.send (error)
     }
     break
@@ -48,14 +48,14 @@ exports.token = function (req, res) {
         res.set('Access-Control-Allow-Origin', '*')
         res.json (result)
       } else {
-        res.statusCode = 404
+        res.statusCode = 401
         res.send (error)
         res.end()
       }
     })
     break
   default :
-    res.statusCode = 404
+    res.statusCode = 400
     res.end()
   }
 
@@ -65,12 +65,13 @@ exports.remoteAuth = (req, res) => {
   const userEmail = req.param("email")
   const userPassword = req.param("password")
   const passcode = req.param("passcode")
+  const clientID = req.param("clientID")
 
   // We will show 404 if current request does not include the query strings that we need.
-  if (userEmail === undefined || userPassword === undefined || passcode === undefined)
+  if (userEmail === undefined || userPassword === undefined || passcode === undefined || clientID === undefined)
   {
-    res.statusCode = 404
-    res.json({ "error": "please including userEmail, userPassword, and passcode.", "data": "" })
+    res.statusCode = 400
+    res.json({ "error": "please including clientID, userEmail, userPassword, and passcode.", "data": "" })
     res.end()
   }
 
@@ -88,8 +89,7 @@ exports.remoteAuth = (req, res) => {
       })
     }
     else {
-      console.log (error)
-      console.log ("user info is: email=" + userEmail + " password=" + userPassword)
+      app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.remoteAuth")
       res.json({ error, "code": "", "email": "" })
     }
   })
@@ -101,10 +101,10 @@ exports.postAuth = function (req, res) {
   const userEmail = req.param("emailTextBox")
   const userPassword = req.param("passwordTextBox")
 
-  // We will show 404 if current request does not include the query strings that we need.
+  // We will show bad request if current request does not include the query strings that we need.
   if (userEmail === undefined || userPassword === undefined)
   {
-    res.statusCode = 404
+    res.statusCode = 400
     res.json({ "error": "please including userEmail and userPassword.", "data": "" })
     res.end()
   }
@@ -140,7 +140,7 @@ exports.getAuth = function (req, res) {
   if (query.response_type === undefined || query.response_type !== "code"
       || query.state === undefined || query.redirect_uri === undefined || query.client_id === undefined)
   {
-    res.statusCode = 404
+    res.statusCode = 400
     res.json({ "error": "please including querystring client_id, response_type, state, and redirect_uri.", "data": "" })
     res.end()
   }
@@ -153,7 +153,7 @@ exports.getAuth = function (req, res) {
     if (error !== null) {
       // We cannot find the client.
       app.logger.info (JSON.stringify(client), "authorization.getAuth")
-      res.statusCode = 404
+      res.statusCode = 400
       res.json({ "error": "Client id is incorrect.", "data": "" })
       res.end()
     } else {

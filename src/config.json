@@ -10,5 +10,6 @@
   "code_timeout": 600000,
   "expires_in": 36000,
   "passcode": "12qwaszx./",
-  "remotePasscode": "56tyghbn./-="
+  "remotePasscode": "56tyghbn./-=",
+  "log_level": 4
 }
