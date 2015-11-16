@@ -41,6 +41,15 @@ exports.token = function (req, res) {
   switch (granttype) {
   case "authorization_code":
     try {
+      // We will show 400 if current request does not include what we need.
+      if (req.param("code") === undefined || req.param("redirect_uri") === undefined || req.param("client_id") === undefined)
+      {
+        res.statusCode = 400
+        res.json({ "error": "please including code, redirect_uri, client_id.", "data": "" })
+        res.end()
+        return
+      }
+
       oauth.authCode (req.param("code"), req.param("redirect_uri"), req.param("client_id"), function (error, result) {
         if (error !== null) {
           app.logger.error ("Failed to auth user. " + req, "authorization.authorization_code")
@@ -62,6 +71,15 @@ exports.token = function (req, res) {
     }
     break
   case "refresh_token":
+    // We will show 400 if current request does not include what we need.
+    if (req.param("refresh_token") === undefined)
+    {
+      res.statusCode = 400
+      res.json({ "error": "please including refresh_token.", "data": "" })
+      res.end()
+      return
+    }
+
     oauth.reflushKey (req.param("refresh_token"), function (error, result) {
       if (error === null) {
         res.statusCode = 200
@@ -137,7 +155,6 @@ exports.postAuth = function (req, res) {
   const user = new User()
   user.email = userEmail
   user.password = userPassword
-
   user.checkPassword(function (error, result) {
     if (error == null)
     {
@@ -162,8 +179,6 @@ exports.getAuth = function (req, res) {
   const url_parts = url.parse (req.url, true)
   const query = url_parts.query
 
-
-
   // We will show 404 if current request does not include the query strings that we need.
   if (query.response_type === undefined || query.response_type !== "code"
       || query.state === undefined || query.redirect_uri === undefined || query.client_id === undefined)
@@ -175,7 +190,6 @@ exports.getAuth = function (req, res) {
     // Init client
     const client = new Client()
     client.code = query.client_id
-
     client.get(function (error, result) {
       if (error !== null) {
         // We cannot find the client.
@@ -184,6 +198,7 @@ exports.getAuth = function (req, res) {
         res.json({ "error": "Client id is incorrect.", "data": "" })
         res.end()
       } else {
+        res.statusCode = 200
         res.render("login", { warning: "" } )
         res.end()
       }
