@@ -42,6 +42,7 @@ app.route('/token')
   .post(cors(), authorization.token)
 
 app.get("/feed", authorization.feed)
+app.get("/signout", authorization.signout)
 
 // Interface to do remote auth.
 // Accept post auth info from other site.

@@ -3,14 +3,29 @@ import url from "url"
 import oauth from "../lib/oauth"
 import app from '../lib/app.js'
 
+exports.signout = function (req, res) {
+  oauth.remove (req.param("authorization"), req.param("client"), function (error, result) {
+    if (error === null) {
+      res.statusCode = 204
+      res.end()
+    }
+    else {
+      res.statusCode = 400
+      res.json ({ error, "data": "" })
+      res.end()
+    }
+  })
+}
 
 exports.feed = function (req, res) {
   oauth.feed (req.get("authorization"), req.get("client"), req.get("page"), req.get("section"), req.get("action"), function (result) {
     if (result === null || result === 'undefined') {
+      app.logger.error ("feed failed. " + req, "authorization.feed")
       res.statusCode = 400
       res.end()
     }
     else {
+      res.statusCode = 200
       res.json (result)
       res.end()
     }
@@ -21,8 +36,6 @@ exports.feed = function (req, res) {
 // 1. Get auth token from code
 // 2. Refresh token
 exports.token = function (req, res) {
-  console.log ("Enter post request!")
-
   const granttype = req.param("grant_type")
 
   switch (granttype) {
@@ -30,6 +43,7 @@ exports.token = function (req, res) {
     try {
       oauth.authCode (req.param("code"), req.param("redirect_uri"), req.param("client_id"), function (error, result) {
         if (error !== null) {
+          app.logger.error ("Failed to auth user. " + req, "authorization.authorization_code")
           res.statusCode = 401
           res.json({ error, "data": "" })
           res.end()
@@ -41,7 +55,7 @@ exports.token = function (req, res) {
         }
       })
     } catch (e) {
-      console.log ("error:" + e)
+      app.logger.error ("Failed to auth user. " + e, "authorization.authorization_code")
       res.statusCode = 400
       res.json({ error, "data": "" })
       res.end()
@@ -50,9 +64,12 @@ exports.token = function (req, res) {
   case "refresh_token":
     oauth.reflushKey (req.param("refresh_token"), function (error, result) {
       if (error === null) {
+        res.statusCode = 200
         res.json({ "error": "", "data": Json.stringify(result) })
+        res.end()
       } else {
-        res.statusCode = 401
+        app.logger.error ("Failed to reflush token. " + error, "authorization.refresh_token")
+        res.statusCode = 400
         res.json({ error, "data": "" })
         res.end()
       }
@@ -60,7 +77,7 @@ exports.token = function (req, res) {
     break
   default :
     res.statusCode = 400
-    res.json({ "error": "", "data": Json.stringify(result) })
+    res.json({ "error": "", "data": "" })
     res.end()
   }
 
@@ -96,6 +113,7 @@ exports.remoteAuth = (req, res) => {
     }
     else {
       app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.remoteAuth")
+      res.statusCode = 400
       res.json({ error, "code": "", "email": "" })
       res.end()
     }
@@ -125,7 +143,7 @@ exports.postAuth = function (req, res) {
     {
       oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
         // redirect to return URL with code.
-        res.statusCode = 204
+        res.statusCode = 302
         res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state + "&email=" + authCache.user_email)
         res.end()
       })
