@@ -30,32 +30,33 @@ exports.token = function (req, res) {
       oauth.authCode (req.param("code"), req.param("redirect_uri"), req.param("client_id"), function (error, result) {
         if (error !== null) {
           res.statusCode = 401
-          res.send (error)
+          res.json({ error, "data": "" })
         }
         else {
-          res.json (result)
+          res.statusCode = 200
+          res.json({ "error": "", "data": Json.stringify(result) })
         }
       })
     } catch (e) {
       console.log ("error:" + e)
       res.statusCode = 400
-      res.send (error)
+      res.json({ error, "data": "" })
     }
     break
   case "refresh_token":
     oauth.reflushKey (req.param("refresh_token"), function (error, result) {
       if (error === null) {
-        res.set('Access-Control-Allow-Origin', '*')
-        res.json (result)
+        res.json({ "error": "", "data": Json.stringify(result) })
       } else {
         res.statusCode = 401
-        res.send (error)
+        res.json({ error, "data": "" })
         res.end()
       }
     })
     break
   default :
     res.statusCode = 400
+    res.json({ "error": "", "data": Json.stringify(result) })
     res.end()
   }
 
@@ -84,6 +85,7 @@ exports.remoteAuth = (req, res) => {
     {
       oauth.grant (req.query.client_id, "", userEmail, function (authCache) {
         // redirect to return URL with code.
+        res.statusCode = 200
         res.json({ "error": "", "code": authCache.code, "email": authCache.user_email })
         res.end()
       })
@@ -118,7 +120,7 @@ exports.postAuth = function (req, res) {
     {
       oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
         // redirect to return URL with code.
-        res.statusCode = 302
+        res.statusCode = 204
         res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state + "&email=" + authCache.user_email)
         res.end()
       })

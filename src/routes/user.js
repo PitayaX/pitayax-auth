@@ -1,6 +1,7 @@
 import { User } from "../db"
 import config from "../config.json"
 import url from "url"
+import app from '../lib/app.js'
 
 const showError = function (inputs, res) {
   res.render("createAccount", inputs)
@@ -9,14 +10,22 @@ const showError = function (inputs, res) {
 
 exports.get = function (req, res) {
   const userEmail = req.params.email
-  user.find(userEmail, function (error, result) {
-    if (error != null) {
-      res.statusCode = 404
-      return res.send('Error 404: ' + error)
-    } else {
-      res.json(result)
-    }
-  })
+  if (userEmail === undefined || userEmail === null) {
+    app.logger.error ("userEmail is blank. ", "routes/user.get")
+    res.statusCode = 400
+    return res.json({ "error": "userEmail is blank.", "data": "" })
+  } else {
+    user.find(userEmail, function (error, result) {
+      if (error != null) {
+        app.logger.error ("Cannot find user. " + userEmail, "routes/user.get")
+        res.statusCode = 400
+        return res.json({ "error": "Cannot find user.", "data": "" })
+      } else {
+        res.statusCode = 200
+        return res.json(result)
+      }
+    })
+  }
 }
 
 exports.create_get = function (req, res) {
@@ -27,6 +36,7 @@ exports.create_get = function (req, res) {
   if (query.redirect_uri === undefined)
   {
     res.statusCode = 400
+    app.logger.error ("Do not include redirect_uri. ", "routes/user.create_get")
     res.send ("Please add redirect_uri to your query string.")
     res.end()
   } else {
