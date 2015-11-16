@@ -12,6 +12,7 @@ exports.feed = function (req, res) {
     }
     else {
       res.json (result)
+      res.end()
     }
   })
 }
@@ -31,16 +32,19 @@ exports.token = function (req, res) {
         if (error !== null) {
           res.statusCode = 401
           res.json({ error, "data": "" })
+          res.end()
         }
         else {
           res.statusCode = 200
           res.json({ "error": "", "data": Json.stringify(result) })
+          res.end()
         }
       })
     } catch (e) {
       console.log ("error:" + e)
       res.statusCode = 400
       res.json({ error, "data": "" })
+      res.end()
     }
     break
   case "refresh_token":
@@ -93,6 +97,7 @@ exports.remoteAuth = (req, res) => {
     else {
       app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.remoteAuth")
       res.json({ error, "code": "", "email": "" })
+      res.end()
     }
   })
 }
@@ -129,6 +134,7 @@ exports.postAuth = function (req, res) {
       app.logger.error ("User login failed. Data is following ", "authorization.postAuth")
       app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.postAuth")
       res.render("login", { warning: "登录失败！用户不存在或者密码错误." } )
+      res.end()
     }
   })
 }
@@ -138,6 +144,8 @@ exports.getAuth = function (req, res) {
   const url_parts = url.parse (req.url, true)
   const query = url_parts.query
 
+
+
   // We will show 404 if current request does not include the query strings that we need.
   if (query.response_type === undefined || query.response_type !== "code"
       || query.state === undefined || query.redirect_uri === undefined || query.client_id === undefined)
@@ -145,21 +153,22 @@ exports.getAuth = function (req, res) {
     res.statusCode = 400
     res.json({ "error": "please including querystring client_id, response_type, state, and redirect_uri.", "data": "" })
     res.end()
+  } else {
+    // Init client
+    const client = new Client()
+    client.code = query.client_id
+
+    client.get(function (error, result) {
+      if (error !== null) {
+        // We cannot find the client.
+        app.logger.info ("Client id is incorrect.", "authorization.getAuth")
+        res.statusCode = 400
+        res.json({ "error": "Client id is incorrect.", "data": "" })
+        res.end()
+      } else {
+        res.render("login", { warning: "" } )
+        res.end()
+      }
+    })
   }
-
-  // Init client
-  const client = new Client()
-  client.code = query.client_id
-
-  client.get(function (error, result) {
-    if (error !== null) {
-      // We cannot find the client.
-      app.logger.info (JSON.stringify(client), "authorization.getAuth")
-      res.statusCode = 400
-      res.json({ "error": "Client id is incorrect.", "data": "" })
-      res.end()
-    } else {
-      res.render("login", { warning: "" } )
-    }
-  })
 }

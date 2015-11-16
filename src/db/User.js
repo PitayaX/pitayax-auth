@@ -48,8 +48,6 @@ export default class User {
         })
     } catch (e) {
       app.logger.error ("Get user from email failed. Data is " + row, "User.getByEmail")
-    } finally {
-      return done("Failed to get user info.", null)
     }
   }
 
@@ -69,8 +67,6 @@ export default class User {
         })
     } catch (e) {
       app.logger.error ("Get user from email failed. Data is " + row, "User.get")
-    } finally {
-      return done("Failed to get user info.", null)
     }
   }
 
@@ -99,8 +95,6 @@ export default class User {
       })
     } catch (e) {
       app.logger.error ("Add user failed. Data is " + row, "User.add")
-    } finally {
-      return done("Failed to add user.", null)
     }
   }
 
@@ -127,9 +121,7 @@ export default class User {
       })
     } catch (e) {
       app.logger.error ("get user failed. Data is " + row, "User.checkPassword")
-    } finally {
-      return done("Failed to check user login info.", null)
-    }
+    } 
   }
 
 }

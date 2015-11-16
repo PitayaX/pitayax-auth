@@ -9,6 +9,8 @@ export default class Client {
     this.name = ""
   }
 
+
+
   fill (row) {
     try {
       if (row !== null && row !== undefined) {
@@ -23,6 +25,7 @@ export default class Client {
       return this
     }
   }
+
 
   get (done) {
     try {
@@ -40,8 +43,6 @@ export default class Client {
         })
     } catch (e) {
       app.logger.error ("get data error. Data is " + this, "Client.get")
-    } finally {
-      return done("failed getting user info from database.", null)
     }
   }
 }

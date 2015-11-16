@@ -20,9 +20,11 @@ exports.get = function (req, res) {
         app.logger.error ("Cannot find user. " + userEmail, "routes/user.get")
         res.statusCode = 400
         return res.json({ "error": "Cannot find user.", "data": "" })
+        res.end()
       } else {
         res.statusCode = 200
         return res.json(result)
+        res.end()
       }
     })
   }
