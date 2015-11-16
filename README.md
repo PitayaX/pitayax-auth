@@ -90,16 +90,9 @@ http://server:port/signout
 > authorization: The token that you are holding now.  
 > client: your client id.
 
-Response will be a json with following format.    
-
-```json
-{     
-  "pass":1 or 0,    
-}    
-```
-
-1 = pass    
-0 = does not pass      
+There is no content to be included in response. You only can check status to see if sign out is succeed or not.   
+204 = signed out   
+400 = exception meet.       
 
 
 ### Create Account
