@@ -92,6 +92,8 @@ exports.authCode = function (code, redirect_uri, clientid, callback) {
   try {
     const savedAuth = new AuthCache ().getFromCache (code)
 
+    new AuthCache().showAllAuthes()
+
     // We cannot find code in cache
     if ( savedAuth === null || savedAuth === 'undefined' ) {
       callback ("We cannot find the auth info.", null)
@@ -119,10 +121,12 @@ exports.authCode = function (code, redirect_uri, clientid, callback) {
 
 exports.grant = function (client_id, redurect_uri, user_email, callback) {
   // create authCache entity to save auth info
-  const authCache = new AuthCache ()
+  let authCache = new AuthCache ()
   authCache.code = uuid.v4()
   authCache.redirect_uri = redurect_uri
   authCache.client_id = client_id
   authCache.user_email = user_email
-  callback(authCache.pushToCache (authCache.code))
+  authCache = authCache.pushToCache (authCache.code)
+  authCache.showAllAuthes()
+  callback(authCache)
 }

@@ -50,7 +50,7 @@ exports.token = function (req, res) {
         }
         else {
           res.statusCode = 200
-          res.json({ "error": "", "data": Json.stringify(result) })
+          res.json({ "error": "", "data": result })
           res.end()
         }
       })
@@ -65,7 +65,7 @@ exports.token = function (req, res) {
     oauth.reflushKey (req.param("refresh_token"), function (error, result) {
       if (error === null) {
         res.statusCode = 200
-        res.json({ "error": "", "data": Json.stringify(result) })
+        res.json({ "error": "", "data": result })
         res.end()
       } else {
         app.logger.error ("Failed to reflush token. " + error, "authorization.refresh_token")

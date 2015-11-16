@@ -73,7 +73,7 @@ exports.create_post = function (req, res) {
       if (err === null)
       {
         // redirect to return URL with code.
-        res.statusCode = 204
+        res.statusCode = 302
         res.append("Location", redirect_uri)
         res.append("data", user)
         res.end()
