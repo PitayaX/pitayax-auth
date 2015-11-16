@@ -13,6 +13,8 @@ class AuthCache {
     this.client_id = ""
     this.access_token = ""
     this.user_email = ""
+    this.user_id = ""
+    this.nickname = ""
   }
 
   pushToCache (key) {
@@ -119,13 +121,15 @@ exports.authCode = function (code, redirect_uri, clientid, callback) {
   }
 }
 
-exports.grant = function (client_id, redurect_uri, user_email, callback) {
+exports.grant = function (user, client_id, redurect_uri, callback) {
   // create authCache entity to save auth info
   let authCache = new AuthCache ()
   authCache.code = uuid.v4()
   authCache.redirect_uri = redurect_uri
   authCache.client_id = client_id
-  authCache.user_email = user_email
+  authCache.user_email = user.email
+  authCache.user_id = user.id
+  authCache.nickname = user.nickname
   authCache = authCache.pushToCache (authCache.code)
   authCache.showAllAuthes()
   callback(authCache)

@@ -145,10 +145,10 @@ exports.postAuth = function (req, res) {
   const userPassword = req.param("passwordTextBox")
 
   // We will show bad request if current request does not include the query strings that we need.
-  if (userEmail === undefined || userPassword === undefined)
+  if (userEmail === undefined || userPassword === undefined || req.query.client_id === undefined || req.query.redirect_uri === undefined )
   {
     res.statusCode = 400
-    res.json({ "error": "please including userEmail and userPassword.", "data": "" })
+    res.json({ "error": "please including client_id, redirect_uri userEmail, and userPassword.", "data": "" })
     res.end()
   }
 
@@ -158,10 +158,11 @@ exports.postAuth = function (req, res) {
   user.checkPassword(function (error, result) {
     if (error == null)
     {
-      oauth.grant (req.query.client_id, req.query.redirect_uri, userEmail, function (authCache) {
+      oauth.grant (result, req.query.client_id, req.query.redirect_uri, function (authCache) {
         // redirect to return URL with code.
         res.statusCode = 302
-        res.append('Location', authCache.redirect_uri + "?code=" + authCache.code + "&state=" + req.query.state + "&email=" + authCache.user_email)
+        res.append('Location', authCache.redirect_uri +
+          "?code=" + authCache.code + "&state=" + req.query.state + "&userid=" + authCache.user_id + "&nickname=" + authCache.nickname)
         res.end()
       })
     }
