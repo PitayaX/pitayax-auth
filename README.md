@@ -80,7 +80,26 @@ Response will be a json with following format.
 ```
 
 1 = pass    
-0 = does not pass    
+0 = does not pass  
+
+### Sign out
+
+Do post call to following URL with certain parameters.    
+http://server:port/signout  
+
+> authorization: The token that you are holding now.  
+> client: your client id.
+
+Response will be a json with following format.    
+
+```json
+{     
+  "pass":1 or 0,    
+}    
+```
+
+1 = pass    
+0 = does not pass      
 
 
 ### Create Account
