@@ -90,9 +90,9 @@ http://server:port/signout
 > authorization: The token that you are holding now.  
 > client: your client id.
 
-There is no content to be included in response. You only can check status to see if sign out is succeed or not.
-204 = signed out
-400 = exception meet.     
+There is no content to be included in response. You only can check status to see if sign out is succeed or not.   
+204 = signed out   
+400 = exception meet.       
 
 
 ### Create Account
