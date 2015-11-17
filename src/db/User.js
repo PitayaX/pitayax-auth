@@ -121,7 +121,7 @@ export default class User {
       })
     } catch (e) {
       app.logger.error ("get user failed. Data is " + row, "User.checkPassword")
-    } 
+    }
   }
 
 }

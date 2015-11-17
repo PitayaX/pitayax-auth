@@ -17,16 +17,17 @@ import config from "../config.json"
 //     res.set('Access-Control-Allow-Origin', '*')
 //   }
 //
-// exports.remoteValidation = (req, res, next) => {
-//   const passcode = req.get("passcode")
-//   if (passcode === config.remotePasscode) {
-//     next (req, res)
-//   } else {
-//     res.statusCode = 404
-//     res.end()
-//   }
-// }
 
+
+exports.remoteValidation = (req, res, next) => {
+  const passcode = req.get("passcode")
+  if (passcode === config.remotePasscode) {
+    next (req, res)
+  } else {
+    res.statusCode = 404
+    res.end()
+  }
+}
 
 exports.sha1 = function (content) {
   const sha1 = crypto.createHash("sha1")

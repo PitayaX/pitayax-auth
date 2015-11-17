@@ -24,7 +24,7 @@ app.set('view engine', 'ejs')
 app.use(cookie())
 app.use(bodyParser())
 // define the path of static files
-app.use(express.static(path.join(__dirname, 'views/static')))
+app.use(express.static('./views/static'))
 app.locals.cache = cache
 
 // site introduce page
@@ -41,8 +41,12 @@ app.route('/token')
   .options(cors(), (req, res) => {  res.end() })
   .post(cors(), authorization.token)
 
+app.route('/signout')
+    .options(cors(), (req, res) => {  res.end() })
+    .post(cors(), authorization.signout)
+
 app.get("/feed", authorization.feed)
-app.get("/signout", authorization.signout)
+
 
 // Interface to do remote auth.
 // Accept post auth info from other site.

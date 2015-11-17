@@ -87,8 +87,8 @@ Response will be a json with following format.
 Do post call to following URL with certain parameters.    
 http://server:port/signout  
 
-> authorization: The token that you are holding now.  
-> client: your client id.
+> token: The token that you are holding now.  
+> client_id: your client id.
 
 There is no content to be included in response. You only can check status to see if sign out is succeed or not.   
 204 = signed out   

@@ -4,17 +4,28 @@ import oauth from "../lib/oauth"
 import app from '../lib/app.js'
 
 exports.signout = function (req, res) {
-  oauth.remove (req.param("authorization"), req.param("client"), function (error, result) {
-    if (error === null) {
-      res.statusCode = 204
-      res.end()
-    }
-    else {
-      res.statusCode = 400
-      res.json ({ error, "data": "" })
-      res.end()
-    }
-  })
+  const token = req.param("token")
+  const clientid = req.param("client_id")
+
+  if (token === undefined || clientid === undefined)
+  {
+    res.statusCode = 400
+    res.json({ "error": "please including token and client_id.", "data": "" })
+    res.end()
+    return
+  } else {
+    oauth.remove (token, clientid, function (error, result) {
+      if (error === null) {
+        res.statusCode = 204
+        res.end()
+      }
+      else {
+        res.statusCode = 400
+        res.json ({ error, "data": "" })
+        res.end()
+      }
+    })
+  }
 }
 
 exports.feed = function (req, res) {
@@ -104,25 +115,27 @@ exports.token = function (req, res) {
 exports.remoteAuth = (req, res) => {
   const userEmail = req.param("email")
   const userPassword = req.param("password")
-  const passcode = req.param("passcode")
-  const clientID = req.param("clientID")
+  const passcode = req.get("passcode")
+  const clientID = req.get("clientID")
 
   // We will show 404 if current request does not include the query strings that we need.
   if (userEmail === undefined || userPassword === undefined || passcode === undefined || clientID === undefined)
   {
+    console.log ("userEmail=" + userEmail + "|userPassword=" + userPassword + "|passcode=" + passcode + "|clientID=" +  clientID )
     res.statusCode = 400
-    res.json({ "error": "please including clientID, userEmail, userPassword, and passcode.", "data": "" })
+    res.json( { "error": "please including clientID, userEmail, userPassword, and passcode.", "data": "" } )
     res.end()
+    return
   }
 
   const user = new User()
   user.email = userEmail
   user.password = userPassword
 
-  user.checkPassword(userEmail, userPassword, function (error, result) {
+  user.checkPassword(function (error, result) {
     if (error == null)
     {
-      oauth.grant (req.query.client_id, "", userEmail, function (authCache) {
+      oauth.grant (result, clientID, "", function (authCache) {
         // redirect to return URL with code.
         res.statusCode = 200
         res.json({ "error": "", "code": authCache.code, "email": authCache.user_email })

@@ -41,12 +41,12 @@ class AuthCache {
   }
 }
 
-exports.remove = function (authorization, client, callback) {
-  const savedAuth = new AuthCache().getFromCache(refresh_token)
+exports.remove = function (token, client, callback) {
+  const savedAuth = new AuthCache().getFromCache(token)
 
   // We cannot find code in cache
   if ( savedAuth === null || savedAuth === 'undefined' ) {
-    callback ("We cannot find the auth info.", null)
+    callback ("We cannot find the token.", null)
   }
   else {
     savedAuth.removeFromCache (refresh_token)

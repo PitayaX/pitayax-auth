@@ -1,0 +1,7 @@
+[Error] 11/16/2015, 9:50:04 AM: test
+[Error] Mon Nov 16 2015 15:58:47 GMT+0800 (CST): Failed to auth user. ReferenceError: Json is not defined
+[Error] Mon Nov 16 2015 16:02:38 GMT+0800 (CST): Failed to auth user. ReferenceError: Json is not defined
+[Error] Mon Nov 16 2015 16:08:03 GMT+0800 (CST): Failed to auth user. ReferenceError: Json is not defined
+[Error] Mon Nov 16 2015 16:09:34 GMT+0800 (CST): Failed to auth user. ReferenceError: Json is not defined
+[Error] Mon Nov 16 2015 16:17:51 GMT+0800 (CST): Failed to auth user. ReferenceError: Json is not defined
+[Error] Mon Nov 16 2015 17:45:35 GMT+0800 (CST): Failed to auth user. [object Object]

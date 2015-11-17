@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>Drag and Drog test</title>
+    <style>
+    </style>
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+      $(function() {
+        var box1 = $("#box1")[0]
+        var box2 = $("#box2")[0]
+        var item = $("#item")[0]
+
+        box1.ondragover = box2.ondragover =  box1.ondragenter = box2.ondragenter = function(e){
+          e.preventDefault()
+        }
+
+        box1.ondrop = box2.ondrop = function (e){
+          e.preventDefault()
+          var element = document.getElementById(e.dataTransfer.getData("item"))
+          e.target.appendChild(element)
+        }
+
+        item.ondragstart = function (e){
+          e.dataTransfer.setData("item",e.target.id)
+          //console.log ("item=" + e.dataTransfer.getData("item"))
+        }
+
+      })
+
+      function showObj(e){
+        var s = ""
+        for(var one in e){
+          s += "e[" + one + "]=" + e[one] + "<br/>"
+        }
+        $("#messageBox").html(s)
+      }
+    </script>
+</head>
+<body>
+  <div id="box1" style="display:block;margin-left:auto;margin-right:auto;background-color:#A462C7;height:100px"></div>
+  <div id="box2" style="display:block;margin-left:auto;margin-right:auto;background-color:#65C1B4;height:100px"/></div>
+  <div id="item" style="background-color:#000;color:#fff;height:50px;width:160px" draggable="true">test to drop item</div>
+  <div id="messageBox"></div>
+</body>
+</html>
