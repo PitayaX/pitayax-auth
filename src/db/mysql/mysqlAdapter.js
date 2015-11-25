@@ -3,34 +3,53 @@ import config from './config.json'
 import app from '../../lib/app.js'
 
 
-exports.createConnection = () => {
-  try {
-    const connection = mysql.createConnection({
-      host: config["mysqlconnect"],
-      user: config["mysqlUserID"],
-      password: config["mysqlPassword"]
-    })
-    connection.connect()
-    return connection
-  } catch (e) {
-    app.logger.error ("Cannot create connection to database!", "mysqlAdapter.createConnection")
+class Mysql {
+  constructor () {
+    this.connection = null
   }
+
+  createConnection () {
+    try {
+      if (this.connection === null) {
+        this.connection = mysql.createConnection({
+          host: config["mysqlconnect"],
+          user: config["mysqlUserID"],
+          password: config["mysqlPassword"]
+        })
+        return this.connection
+      }
+    } catch (e) {
+      app.logger.error ("Cannot create connection to database! Error is " + e, "mysqlAdapter.createConnection")
+    }
+  }
+
+  connect () {
+    try {
+      if (this.connection === null) {
+        createConnection ()
+      }
+      if (this.connection !== null) {
+        this.connection.connect ()
+      }
+    } catch (e) {
+      app.logger.error ("Cannot create connection to database! Error is " + e, "mysqlAdapter.connect")
+    }
+  }
+
+  end ()  {
+    try {
+      if (this.connection === null) {
+        return
+      }
+      else {
+        this.connection.end ()
+        this.connection = null
+      }
+    } catch (e) {
+      app.logger.error ("Cannot create connection to database! Error is " + e, "mysqlAdapter.end")
+    }
+  }
+
 }
-// 
-// exports.query = function (sql, values, cb) {
-//   const connection = createConnection()
-//   connection.query(sql, values, function (err, rows, fields) {
-//     if (err) {
-//       connection.end()
-//       callback(null, err)
-//       throw err
-//     } else {
-//       connection.end()
-//       if (rows.length === 0) {
-//         callback(null, null)
-//       } else {
-//         callback(rows, null)
-//       }
-//     }
-//   })
-// }
+
+module.exports = new Mysql()

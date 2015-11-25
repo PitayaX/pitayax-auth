@@ -49,6 +49,9 @@ export default class User {
     } catch (e) {
       app.logger.error ("Get user from email failed. Data is " + row, "User.getByEmail")
     }
+    finally {
+      mysql.end()
+    }
   }
 
   get (done) {
@@ -67,6 +70,9 @@ export default class User {
         })
     } catch (e) {
       app.logger.error ("Get user from email failed. Data is " + row, "User.get")
+    }
+    finally {
+      mysql.end()
     }
   }
 
@@ -96,6 +102,9 @@ export default class User {
     } catch (e) {
       app.logger.error ("Add user failed. Data is " + row, "User.add")
     }
+    finally {
+      mysql.end()
+    }
   }
 
   checkPassword (done) {
@@ -122,6 +131,9 @@ export default class User {
     } catch (e) {
       app.logger.error ("get user failed. Data is " + row, "User.checkPassword")
     }
+    finally {
+      mysql.end()
+    }    
   }
 
 }

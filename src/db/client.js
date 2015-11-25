@@ -9,8 +9,6 @@ export default class Client {
     this.name = ""
   }
 
-
-
   fill (row) {
     try {
       if (row !== null && row !== undefined) {
@@ -26,10 +24,9 @@ export default class Client {
     }
   }
 
-
   get (done) {
     try {
-      mysql.createConnection().query("\
+      mysql.connect().query("\
         SELECT * FROM `" + config.databaseName + "`.`client` WHERE `code` = ?", [ this.code ],
         (err, result) => {
           if (err != null) {
@@ -43,6 +40,9 @@ export default class Client {
         })
     } catch (e) {
       app.logger.error ("get data error. Data is " + this, "Client.get")
+    }
+    finally {
+      mysql.end()
     }
   }
 }
