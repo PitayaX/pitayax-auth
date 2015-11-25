@@ -9,6 +9,10 @@ export default class Client {
     this.name = ""
   }
 
+  getMe () {
+    return  `id = ${this.id}, code = ${this.code}, name = ${this.name}`
+  }
+
   fill (row) {
     try {
       if (row !== null && row !== undefined) {
@@ -18,7 +22,7 @@ export default class Client {
         app.logger.info (JSON.stringify(this), "Client.fill")
       }
     } catch (e) {
-      app.logger.error ("Fill data error. Data is " + row, "Client.fill")
+      app.logger.error ("Fill data error. Error is [" + e + "] data is [" + this.getMe() + "]", "Client.fill")
     } finally {
       return this
     }
@@ -39,7 +43,8 @@ export default class Client {
           }
         })
     } catch (e) {
-      app.logger.error ("get data error. Data is " + this, "Client.get")
+      app.logger.error ("Get data error. Error is [" + e + "] data is [" + this.getMe() + "]", "Client.get")
+      return done("get data error. ", null)
     }
     finally {
       mysql.end()

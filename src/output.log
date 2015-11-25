@@ -1,0 +1,2 @@
+[Error] 11/25/2015, 10:19:35 PM: get data error. Data is [object Object]
+[Error] 11/25/2015, 10:21:33 PM: get data error. Error is TypeError: Cannot read property 'query' of undefined

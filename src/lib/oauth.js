@@ -71,7 +71,6 @@ exports.feed = function (authorization, client, page, section, action, callback)
 
 // This method is used to reflush an auth token
 exports.reflushKey = function (refresh_token,  callback) {
-  console.log ("Do reflush key.")
   const savedAuth = new AuthCache().getFromCache(refresh_token)
 
   // We cannot find code in cache

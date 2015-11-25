@@ -8,6 +8,7 @@ class Mysql {
     this.connection = null
   }
 
+
   createConnection () {
     try {
       if (this.connection === null) {
@@ -19,6 +20,7 @@ class Mysql {
         return this.connection
       }
     } catch (e) {
+      console.log (e)
       app.logger.error ("Cannot create connection to database! Error is " + e, "mysqlAdapter.createConnection")
     }
   }
@@ -26,11 +28,16 @@ class Mysql {
   connect () {
     try {
       if (this.connection === null) {
-        createConnection ()
+        this.connection = mysql.createConnection({
+          host: config["mysqlconnect"],
+          user: config["mysqlUserID"],
+          password: config["mysqlPassword"]
+        })
       }
       if (this.connection !== null) {
         this.connection.connect ()
       }
+      return this.connection
     } catch (e) {
       app.logger.error ("Cannot create connection to database! Error is " + e, "mysqlAdapter.connect")
     }
@@ -51,5 +58,6 @@ class Mysql {
   }
 
 }
+
 
 module.exports = new Mysql()

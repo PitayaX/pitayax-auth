@@ -6,7 +6,6 @@ import uuid from "node-uuid"
 import { sha1 } from '../lib/tool.js'
 
 export default class User {
-
   constructor () {
     this.id = ""
     this.email = ""
@@ -14,6 +13,10 @@ export default class User {
     this.password = ""
     this.lastlogin = null
     this.passwordEncoded = false
+  }
+
+  getMe () {
+    return  `id = ${this.id}, email = ${this.email}, nickname = ${this.nickname}, password = ${this.password}, lastlogin = ${this.lastlogin}, passwordEncoded = ${this.passwordEncoded}`
   }
 
   fill (row) {
@@ -26,7 +29,7 @@ export default class User {
         app.logger.info (JSON.stringify(this), "User.fill")
       }
     } catch (e) {
-      app.logger.error ("Fill data error. Data is " + row, "User.fill")
+      app.logger.error ("Fill data error. Error is [" + e + "] data is [" + this.getMe() + "]", "User.fill")
     } finally {
       return this
     }
@@ -47,7 +50,7 @@ export default class User {
           }
         })
     } catch (e) {
-      app.logger.error ("Get user from email failed. Data is " + row, "User.getByEmail")
+      app.logger.error ("Get user from email failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.getByEmail")
     }
     finally {
       mysql.end()
@@ -69,7 +72,7 @@ export default class User {
           }
         })
     } catch (e) {
-      app.logger.error ("Get user from email failed. Data is " + row, "User.get")
+      app.logger.error ("Get user from email failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.get")
     }
     finally {
       mysql.end()
@@ -100,7 +103,7 @@ export default class User {
         }
       })
     } catch (e) {
-      app.logger.error ("Add user failed. Data is " + row, "User.add")
+      app.logger.error ("Add user failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.add")
     }
     finally {
       mysql.end()
@@ -129,11 +132,11 @@ export default class User {
         }
       })
     } catch (e) {
-      app.logger.error ("get user failed. Data is " + row, "User.checkPassword")
+      app.logger.error ("get user failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.checkPassword")
     }
     finally {
       mysql.end()
-    }    
+    }
   }
 
 }

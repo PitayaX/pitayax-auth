@@ -10,7 +10,7 @@ exports.signout = function (req, res) {
   if (token === undefined || clientid === undefined)
   {
     res.statusCode = 400
-    res.json({ "error": "please including token and client_id.", "data": "" })
+    res.json({ "error": "please including token and client_id." })
     res.end()
     return
   } else {
@@ -21,7 +21,7 @@ exports.signout = function (req, res) {
       }
       else {
         res.statusCode = 400
-        res.json ({ error, "data": "" })
+        res.json ({ error })
         res.end()
       }
     })
@@ -65,48 +65,49 @@ exports.token = function (req, res) {
         if (error !== null) {
           app.logger.error ("Failed to auth user. " + req, "authorization.authorization_code")
           res.statusCode = 401
-          res.json({ error, "data": "" })
+          res.json({ error })
           res.end()
         }
         else {
           res.statusCode = 200
-          res.json({ "error": "", "data": result })
+          res.json({ "data": result })
           res.end()
         }
       })
     } catch (e) {
       app.logger.error ("Failed to auth user. " + e, "authorization.authorization_code")
       res.statusCode = 400
-      res.json({ error, "data": "" })
+      res.json({ error })
       res.end()
     }
     break
   case "refresh_token":
+    const token = req.param("refresh_token")
     // We will show 400 if current request does not include what we need.
-    if (req.param("refresh_token") === undefined)
+    if (token === undefined)
     {
       res.statusCode = 400
-      res.json({ "error": "please including refresh_token.", "data": "" })
+      res.json({ "error": "please including refresh_token." })
       res.end()
-      return
     }
-
-    oauth.reflushKey (req.param("refresh_token"), function (error, result) {
-      if (error === null) {
-        res.statusCode = 200
-        res.json({ "error": "", "data": result })
-        res.end()
-      } else {
-        app.logger.error ("Failed to reflush token. " + error, "authorization.refresh_token")
-        res.statusCode = 400
-        res.json({ error, "data": "" })
-        res.end()
-      }
-    })
+    else {
+      oauth.reflushKey (token, function (error, result) {
+        if (error === null) {
+          res.statusCode = 200
+          res.json({ "data": result })
+          res.end()
+        } else {
+          app.logger.error ("Failed to reflush token. " + error, "authorization.refresh_token")
+          res.statusCode = 400
+          res.json({ error })
+          res.end()
+        }
+      })
+    }
     break
   default :
     res.statusCode = 400
-    res.json({ "error": "", "data": "" })
+    res.json({ "error": "" })
     res.end()
   }
 
@@ -123,7 +124,7 @@ exports.remoteAuth = (req, res) => {
   {
     console.log ("userEmail=" + userEmail + "|userPassword=" + userPassword + "|passcode=" + passcode + "|clientID=" +  clientID )
     res.statusCode = 400
-    res.json( { "error": "please including clientID, userEmail, userPassword, and passcode.", "data": "" } )
+    res.json( { "error": "please including clientID, userEmail, userPassword, and passcode." } )
     res.end()
     return
   }
@@ -138,14 +139,14 @@ exports.remoteAuth = (req, res) => {
       oauth.grant (result, clientID, "", function (authCache) {
         // redirect to return URL with code.
         res.statusCode = 200
-        res.json({ "error": "", "code": authCache.code, "email": authCache.user_email })
+        res.json({ "code": authCache.code, "email": authCache.user_email })
         res.end()
       })
     }
     else {
       app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.remoteAuth")
       res.statusCode = 400
-      res.json({ error, "code": "", "email": "" })
+      res.json({ error })
       res.end()
     }
   })
@@ -161,7 +162,7 @@ exports.postAuth = function (req, res) {
   if (userEmail === undefined || userPassword === undefined || req.query.client_id === undefined || req.query.redirect_uri === undefined )
   {
     res.statusCode = 400
-    res.json({ "error": "please including client_id, redirect_uri userEmail, and userPassword.", "data": "" })
+    res.json({ "error": "please including client_id, redirect_uri userEmail, and userPassword." })
     res.end()
   }
 
@@ -198,7 +199,7 @@ exports.getAuth = function (req, res) {
       || query.state === undefined || query.redirect_uri === undefined || query.client_id === undefined)
   {
     res.statusCode = 400
-    res.json({ "error": "please including querystring client_id, response_type, state, and redirect_uri.", "data": "" })
+    res.json({ "error": "please including querystring client_id, response_type, state, and redirect_uri." })
     res.end()
   } else {
     // Init client
@@ -209,7 +210,7 @@ exports.getAuth = function (req, res) {
         // We cannot find the client.
         app.logger.info ("Client id is incorrect.", "authorization.getAuth")
         res.statusCode = 400
-        res.json({ "error": "Client id is incorrect.", "data": "" })
+        res.json({ "error": "Client id is incorrect." })
         res.end()
       } else {
         res.statusCode = 200

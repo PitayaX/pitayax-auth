@@ -13,13 +13,13 @@ exports.get = function (req, res) {
   if (userEmail === undefined || userEmail === null) {
     app.logger.error ("userEmail is blank. ", "routes/user.get")
     res.statusCode = 400
-    return res.json({ "error": "userEmail is blank.", "data": "" })
+    return res.json({ "error": "userEmail is blank." })
   } else {
     user.find(userEmail, function (error, result) {
       if (error != null) {
         app.logger.error ("Cannot find user. " + userEmail, "routes/user.get")
         res.statusCode = 400
-        return res.json({ "error": "Cannot find user.", "data": "" })
+        return res.json({ "error": "Cannot find user." })
         res.end()
       } else {
         res.statusCode = 200
@@ -55,7 +55,7 @@ exports.create_post = function (req, res) {
 
   if (nickName === undefined || userPassword === undefined || userEmail === undefined || passcode === undefined || redirect_uri === undefined ) {
     res.statusCode = 400
-    res.json({ "error": "please including userEmail, passcode, nickName and userPassword.", "data": "" })
+    res.json({ "error": "please including userEmail, passcode, nickName and userPassword." })
     res.end()
   }
 
