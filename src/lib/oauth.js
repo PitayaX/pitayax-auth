@@ -42,6 +42,9 @@ class AuthCache {
 }
 
 exports.remove = function (token, client, callback) {
+  console.log ("token = " + token )
+  console.log ("=======================")
+
   const savedAuth = new AuthCache().getFromCache(token)
 
   // We cannot find code in cache
@@ -49,7 +52,7 @@ exports.remove = function (token, client, callback) {
     callback ("We cannot find the token.", null)
   }
   else {
-    savedAuth.removeFromCache (refresh_token)
+    savedAuth.removeFromCache (token)
     callback (null,  null)
   }
 }
@@ -112,7 +115,7 @@ exports.authCode = function (code, redirect_uri, clientid, callback) {
       savedAuth.access_token = uuid.v4()
       savedAuth.pushToCache (savedAuth.access_token)
       savedAuth.showAllAuthes ()
-      callback (null, { "access_token": savedAuth.access_token, "token_type": "pitayax-auth", expires_in: config.expires_in })
+      callback (null, { "access_token": savedAuth.access_token, "userid": savedAuth.user_id, "nickname": savedAuth.nickname, "token_type": "pitayax-auth", expires_in: config.expires_in })
     }
   } catch (e) {
     console.log ("error:" + e)

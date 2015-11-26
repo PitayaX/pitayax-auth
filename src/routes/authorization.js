@@ -128,28 +128,29 @@ exports.remoteAuth = (req, res) => {
     res.end()
     return
   }
+  else {
+    const user = new User()
+    user.email = userEmail
+    user.password = userPassword
 
-  const user = new User()
-  user.email = userEmail
-  user.password = userPassword
-
-  user.checkPassword(function (error, result) {
-    if (error == null)
-    {
-      oauth.grant (result, clientID, "", function (authCache) {
-        // redirect to return URL with code.
-        res.statusCode = 200
-        res.json({ "code": authCache.code, "email": authCache.user_email })
+    user.checkPassword(function (error, result) {
+      if (error == null)
+      {
+        oauth.grant (result, clientID, "", function (authCache) {
+          // redirect to return URL with code.
+          res.statusCode = 200
+          res.json({ "code": authCache.code, "email": authCache.user_email })
+          res.end()
+        })
+      }
+      else {
+        app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.remoteAuth")
+        res.statusCode = 400
+        res.json({ error })
         res.end()
-      })
-    }
-    else {
-      app.logger.error ("user info is: email=" + userEmail + " password=" + userPassword, "authorization.remoteAuth")
-      res.statusCode = 400
-      res.json({ error })
-      res.end()
-    }
-  })
+      }
+    })
+  }
 }
 
 

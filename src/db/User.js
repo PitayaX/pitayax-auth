@@ -37,7 +37,7 @@ export default class User {
 
   getByEmail (done) {
     try {
-      mysql.createConnection().query("\
+      mysql.connect().query("\
       SELECT * FROM `" + config.databaseName + "`.`user` WHERE `email` = ?", [ this.email ],
         (err, result) => {
           if (err !== null) {
@@ -51,6 +51,7 @@ export default class User {
         })
     } catch (e) {
       app.logger.error ("Get user from email failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.getByEmail")
+      return done("Get user from email failed.", null)
     }
     finally {
       mysql.end()
@@ -59,7 +60,7 @@ export default class User {
 
   get (done) {
     try {
-      mysql.createConnection().query("\
+      mysql.connect().query("\
       SELECT * FROM `" + config.databaseName + "`.`user` WHERE `id` = ?", [ this.id ],
         (err, result) => {
           if (err != null) {
@@ -73,6 +74,7 @@ export default class User {
         })
     } catch (e) {
       app.logger.error ("Get user from email failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.get")
+      return done("Get user from email failed.", null)
     }
     finally {
       mysql.end()
@@ -88,7 +90,7 @@ export default class User {
           this.passwordEncoded = true
           app.logger.info ("New account. Data is" + uuid.v4() + " | " + this.email +" | " + this.nickname + " | " + this.password, "User.add")
 
-          mysql.createConnection().query("INSERT INTO `" + config.databaseName + "`.`user` set ? ",
+          mysql.connect().query("INSERT INTO `" + config.databaseName + "`.`user` set ? ",
                       { "id": uuid.v4(), "email": this.email, "nickname": this.nickname, "password": this.password },
               (err, result) => {
                 if (err === null) {
@@ -104,6 +106,7 @@ export default class User {
       })
     } catch (e) {
       app.logger.error ("Add user failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.add")
+      return done("Get user from email failed.", null)
     }
     finally {
       mysql.end()
@@ -133,6 +136,7 @@ export default class User {
       })
     } catch (e) {
       app.logger.error ("get user failed. Error is [" + e + "] data is [" + this.getMe() + "]", "User.checkPassword")
+      return done("Get user from email failed.", null)
     }
     finally {
       mysql.end()

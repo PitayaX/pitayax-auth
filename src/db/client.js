@@ -30,18 +30,21 @@ export default class Client {
 
   get (done) {
     try {
-      mysql.connect().query("\
-        SELECT * FROM `" + config.databaseName + "`.`client` WHERE `code` = ?", [ this.code ],
-        (err, result) => {
-          if (err != null) {
-            return done(err, null)
-          } else if (result === null || result.length === 0) {
-            return done("No client found", null)
-          } else {
-            const client = new Client()
-            return done(null, client.fill(result[0]))
-          }
-        })
+      connection = mysql.connect()
+      if (connection !== null) {
+        connection.query("\
+          SELECT * FROM `" + config.databaseName + "`.`client` WHERE `code` = ?", [ this.code ],
+          (err, result) => {
+            if (err != null) {
+              return done(err, null)
+            } else if (result === null || result.length === 0) {
+              return done("No client found", null)
+            } else {
+              const client = new Client()
+              return done(null, client.fill(result[0]))
+            }
+          })
+      }
     } catch (e) {
       app.logger.error ("Get data error. Error is [" + e + "] data is [" + this.getMe() + "]", "Client.get")
       return done("get data error. ", null)
