@@ -42,13 +42,10 @@ class AuthCache {
 }
 
 exports.remove = function (token, client, callback) {
-  console.log ("token = " + token )
-  console.log ("=======================")
-
   const savedAuth = new AuthCache().getFromCache(token)
-
   // We cannot find code in cache
   if ( savedAuth === null || savedAuth === 'undefined' ) {
+    app.logger.error ("We cannot find the token. token is " + token, "oauth.remove")
     callback ("We cannot find the token.", null)
   }
   else {

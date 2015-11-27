@@ -1,7 +1,6 @@
-[Error] 11/25/2015, 10:19:35 PM: get data error. Data is [object Object]
-[Error] 11/25/2015, 10:21:33 PM: get data error. Error is TypeError: Cannot read property 'query' of undefined
-[Error] 11/26/2015, 10:08:44 AM: Get user from email failed. Error is [TypeError: _mysqlMysqlAdapter2.default.createConnection is not a function] data is [id = , email = yemol_yuan@hotmail.com, nickname = , password = talk2513, lastlogin = null, passwordEncoded = false]
-[Error] 11/26/2015, 11:00:15 AM: Failed to auth user. [object Object]
-[Error] 11/26/2015, 11:00:22 AM: Failed to auth user. [object Object]
-[Error] 11/26/2015, 11:00:58 AM: Failed to auth user. [object Object]
-[Error] 11/26/2015, 11:08:57 AM: Failed to auth user. [object Object]
+[Error] 11/27/2015, 4:05:05 PM: We cannot find the token. token is 578471bd-3f57-4c5e-bdfd-77f5af996e82
+[Error] 11/27/2015, 4:05:05 PM: signout failed. Error is We cannot find the token.
+[Error] 11/27/2015, 4:06:18 PM: We cannot find the token. token is 578471bd-3f57-4c5e-bdfd-77f5af996e82
+[Error] 11/27/2015, 4:06:18 PM: signout failed. Error is We cannot find the token.
+[Error] 11/27/2015, 4:07:51 PM: We cannot find the token. token is 578471bd-3f57-4c5e-bdfd-77f5af996e82
+[Error] 11/27/2015, 4:07:51 PM: signout failed. Error is We cannot find the token.

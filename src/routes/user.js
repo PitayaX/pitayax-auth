@@ -3,23 +3,19 @@ import config from "../config.json"
 import url from "url"
 import app from '../lib/app.js'
 
-const showError = function (inputs, res) {
-  res.render("createAccount", inputs)
-  res.end()
-}
-
 exports.get = function (req, res) {
   const userEmail = req.params.email
   if (userEmail === undefined || userEmail === null) {
     app.logger.error ("userEmail is blank. ", "routes/user.get")
     res.statusCode = 400
-    return res.json({ "error": "userEmail is blank." })
+    res.json({ "error": { "id": "100", "description": exception._100 } })
+    res.end ()
   } else {
     user.find(userEmail, function (error, result) {
       if (error != null) {
         app.logger.error ("Cannot find user. " + userEmail, "routes/user.get")
         res.statusCode = 400
-        return res.json({ "error": "Cannot find user." })
+        res.json({ "error": { "id": "404", "description": exception._404 } })
         res.end()
       } else {
         res.statusCode = 200
@@ -39,7 +35,7 @@ exports.create_get = function (req, res) {
   {
     res.statusCode = 400
     app.logger.error ("Do not include redirect_uri. ", "routes/user.create_get")
-    res.send ("Please add redirect_uri to your query string.")
+    res.json({ "error": { "id": "100", "description": exception._100 } })
     res.end()
   } else {
     res.render("createAccount", { message: "", userPassword: "", userEmail: "", nickName: "", passcode: "" })
@@ -55,7 +51,7 @@ exports.create_post = function (req, res) {
 
   if (nickName === undefined || userPassword === undefined || userEmail === undefined || passcode === undefined || redirect_uri === undefined ) {
     res.statusCode = 400
-    res.json({ "error": "please including userEmail, passcode, nickName and userPassword." })
+    res.json({ "error": { "id": "100", "description": exception._100 } })
     res.end()
   }
 
